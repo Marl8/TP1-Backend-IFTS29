@@ -1,0 +1,41 @@
+{
+  "MenuItem": [
+    {
+      "id": 1,
+      "name": "milanesa",
+      "price": 4500,
+      "category": "minuta",
+      "stock": 50
+    },
+    {
+      "id": 2,
+      "name": "hamburguesa",
+      "price": 4000,
+      "category": "minuta",
+      "stock": 50
+    },
+    {
+      "id": 3,
+      "name": "ensalada mixta",
+      "price": 3000,
+      "category": "minuta",
+      "stock": 50
+    },
+    {
+      "id": 4,
+      "name": "papas fritas",
+      "price": 3500,
+      "category": "minuta",
+      "stock": 50
+    },
+    {
+      "id": 5,
+      "name": "pizza",
+      "price": 6500,
+      "category": "minuta",
+      "stock": 50
+    }
+  ],
+  "customer": [],
+  "deliveryOrder": []
+}
