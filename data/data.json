@@ -5,14 +5,14 @@
       "name": "milanesa",
       "price": 4500,
       "category": "minuta",
-      "stock": 50
+      "stock": 48
     },
     {
       "id": 2,
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 50
+      "stock": 49
     },
     {
       "id": 3,
@@ -36,6 +36,15 @@
       "stock": 50
     }
   ],
-  "customer": [],
-  "deliveryOrder": []
+  "customer": [
+    {
+      "id": 100,
+      "name": "Juan Perez",
+      "phone": "23456789",
+      "address": "Av. Siempre Viva 742"
+    }
+  ],
+  "deliveryOrder": [
+    {}
+  ]
 }
