@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const CustomerRoutes = require('./routes/CustomerRoutes.js')
-const DeliveryOrderRoutes = require('./routes/DeliveryOrderRoutes');
+const DeliveryOrderRoutes = require('./routes/DeliveryOrderRoutes.js');
 
 
 app.use(express.json());

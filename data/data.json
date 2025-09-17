@@ -5,14 +5,14 @@
       "name": "milanesa",
       "price": 4500,
       "category": "minuta",
-      "stock": 48
+      "stock": 42
     },
     {
       "id": 2,
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 49
+      "stock": 46
     },
     {
       "id": 3,
@@ -45,6 +45,66 @@
     }
   ],
   "deliveryOrder": [
-    {}
+    {},
+    {
+      "id": 1758088258886,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000
+    },
+    {
+      "id": 1758088954880,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000
+    },
+    {
+      "id": 1758088956312,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000
+    }
   ]
 }

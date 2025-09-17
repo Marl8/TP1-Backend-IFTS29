@@ -34,7 +34,7 @@ class DeliveryOrder {
     }
 
     setStatus(status) { 
-        his.#status = status; 
+        this.#status = status; 
     }
 
     /*
@@ -74,6 +74,18 @@ class DeliveryOrder {
     
     getItems() { 
         return [...this.#items]; 
+    }
+
+     toJSON() {
+        return {
+            id: this.#id,
+            customerId: this.#customerId,
+            items: this.#items,
+            status: this.#status,
+            total: this.#total,
+            estimatedTime: this.#estimatedTime
+            
+        };
     }
 }
 
