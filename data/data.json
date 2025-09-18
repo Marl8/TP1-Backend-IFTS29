@@ -5,21 +5,21 @@
       "name": "milanesa",
       "price": 4500,
       "category": "minuta",
-      "stock": 50
+      "stock": 31
     },
     {
       "id": 2,
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 50
+      "stock": 41
     },
     {
       "id": 3,
       "name": "ensalada mixta",
       "price": 3000,
       "category": "minuta",
-      "stock": 50
+      "stock": 49
     },
     {
       "id": 4,
@@ -36,6 +36,204 @@
       "stock": 50
     }
   ],
-  "customer": [],
-  "deliveryOrder": []
+  "customer": [
+    {
+      "id": 100,
+      "name": "Juan Perez",
+      "phone": "23456789",
+      "address": "Av. Siempre Viva 742"
+    }
+  ],
+  "deliveryOrder": [
+    {},
+    {
+      "id": 1758088258886,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000
+    },
+    {
+      "id": 1758091356530,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000,
+      "plataforma": "Rappi"
+    },
+    {
+      "id": 1758092433501,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 4500,
+      "plataforma": "Ubber Eats"
+    },
+    {
+      "id": 1758092514952,
+      "customerId": 123,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": "1758090933568",
+      "customerId": "100",
+      "items": [
+        {
+          "id": "1",
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": "2",
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000,
+      "plataforma": "Rappi"
+    },
+    {
+      "id": 1758096970472,
+      "customerId": 101,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 13000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758097037273,
+      "customerId": 100,
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 3000,
+      "plataforma": "PedidosYa"
+    },
+    {
+      "id": "1758090933569",
+      "customerId": "101",
+      "items": [
+        {
+          "id": "3",
+          "name": "pizza",
+          "price": 6000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 6000,
+      "plataforma": "PedidosYa"
+    }
+  ],
+  "externalOrders": [
+    {
+      "id": "1758090933568",
+      "customerId": "100",
+      "items": [
+        {
+          "id": "1",
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
+        {
+          "id": "2",
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "total": 13000,
+      "plataforma": "Rappi",
+      "status": "preparing",
+      "date_received": "2025-09-20T15:00:00"
+    },
+    {
+      "id": "1758090933569",
+      "customerId": "101",
+      "items": [
+        {
+          "id": "3",
+          "name": "pizza",
+          "price": 6000,
+          "quantity": 1
+        }
+      ],
+      "total": 6000,
+      "plataforma": "PedidosYa",
+      "status": "preparing",
+      "date_received": "2025-09-20T15:10:00"
+    }
+  ]
 }

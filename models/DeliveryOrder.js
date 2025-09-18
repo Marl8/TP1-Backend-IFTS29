@@ -1,4 +1,3 @@
-
 class DeliveryOrder {
     #id;
     #customerId;
@@ -7,14 +6,15 @@ class DeliveryOrder {
     #total;
     //#assignedRiderId;
     #estimatedTime;
+    #plataforma;  // Singular, ya no es un array
 
-    constructor(id, customerId, total, status = 'preparing') {
+    constructor(id, customerId, total, status = 'preparing', plataforma = 'Propia') {
         this.#id = id;
         this.#customerId = customerId;
-        //this.#assignedRiderId = assignedRiderId;
         this.#status = status;
         this.#total = total;
         this.#items = [];
+        this.#plataforma = plataforma;  // Valor por defecto 'Propia'
     }
 
     getId() { 
@@ -34,18 +34,8 @@ class DeliveryOrder {
     }
 
     setStatus(status) { 
-        his.#status = status; 
+        this.#status = status; 
     }
-
-    /*
-    getAssignedRiderId() { 
-        return this.#assignedRiderId; 
-    }
-
-    setAssignedRiderId(assignedRiderId) { 
-        this.#assignedRiderId = assignedRiderId; 
-    }
-    */    
 
     getTotal() { 
         return this.#total; 
@@ -54,7 +44,6 @@ class DeliveryOrder {
     setTotal(total) { 
         this.#total = total; 
     }
-
 
     getEstimatedTime() { 
         return this.#estimatedTime; 
@@ -75,6 +64,30 @@ class DeliveryOrder {
     getItems() { 
         return [...this.#items]; 
     }
+
+    // Métodos para obtener y setear la plataforma
+    getPlataforma() {
+        return this.#plataforma;
+    }
+
+    setPlataforma(plataforma) {
+        this.#plataforma = plataforma;
+    }
+
+    // Método para convertir el objeto a JSON
+    toJSON() {
+        return {
+            id: this.#id,
+            customerId: this.#customerId,
+            items: this.#items,
+            status: this.#status,
+            total: this.#total,
+            estimatedTime: this.#estimatedTime,
+            plataforma: this.#plataforma  
+        };
+    }
 }
 
 module.exports = DeliveryOrder;
+
+
