@@ -2,7 +2,7 @@ const {findData, writeData} = require('../data/db.js');
 const MenuItem = require('../models/MenuItem.js')
 
 
-// Buscar MeniItems
+// Buscar MenuItems
 
 exports.findMenuItems = async(req, res) => {
     const db = await findData();
@@ -14,7 +14,7 @@ exports.findMenuItems = async(req, res) => {
 }
 
 
-// Buscar MeniItem por id
+// Buscar MenuItem por id
 
 exports.findMenuItemById = async(req, res) => {
     const db = await findData();
@@ -28,7 +28,7 @@ exports.findMenuItemById = async(req, res) => {
 }
 
 
-// Guardar un MeniItem
+// Guardar un MenuItem
 
 exports.saveMenuItem = async(req, res)=>{
     const db = await findData();
@@ -87,7 +87,7 @@ function suppliesValidator(supplies, db){
 }
 
 
-// Actualizar MeniItem
+// Actualizar MenuItem
 
 exports.updateMenuItem = async (req, res)=>{
     const db = await findData();
@@ -123,7 +123,7 @@ exports.updateMenuItem = async (req, res)=>{
 };
 
 
-// Actualizar stock del MeniItem
+// Actualizar stock del MenuItem
 
 exports.updateStockItem = async (req, res)=>{
     const db = await findData();
@@ -141,7 +141,7 @@ exports.updateStockItem = async (req, res)=>{
 };
 
 
-// Eliminar un MeniItem
+// Eliminar un MenuItem
 
 exports.deleteMenuItem = async (req, res)=>{
     const db = await findData();
