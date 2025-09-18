@@ -2,6 +2,8 @@ const Customer = require('../models/Customer.js');
 const {findData, writeData} = require('../data/db.js');
 
 
+// Guargar un nuevo cliente
+
 exports.saveCustomer = async (req, res)=>{
     const db = findData();
     const {id, name, phone, address} = req.body;
@@ -28,6 +30,8 @@ exports.saveCustomer = async (req, res)=>{
     res.status(201).json({message: 'Cliente guardado con éxito'});
 };
 
+// Buscar cliente por id
+
 exports.findCustomerById = async (req, res)=>{
     const db = findData();
     const id = parseInt(req.params.id);
@@ -37,6 +41,8 @@ exports.findCustomerById = async (req, res)=>{
         }      
     res.status(200).json(customer);
 };
+
+// Actualizar cliente
 
 exports.updateCustomer = async (req, res)=>{
     const db = findData();
@@ -63,6 +69,9 @@ exports.updateCustomer = async (req, res)=>{
     writeData(db);
     res.status(200).json({cliente: db.customer[index], message: 'Cliente modificado con éxito'});
 };
+
+
+// Eliminar cliente
 
 exports.deleteCustomer = async (req, res)=>{
     const db = findData();

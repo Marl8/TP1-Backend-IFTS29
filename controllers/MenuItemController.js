@@ -2,6 +2,8 @@ const {findData, writeData} = require('../data/db.js');
 const MenuItem = require('../models/MenuItem.js')
 
 
+// Buscar MeniItems
+
 exports.findMenuItems = async(req, res) => {
     const db = await findData();
     if(db.MenuItem.length !== 0){
@@ -10,6 +12,9 @@ exports.findMenuItems = async(req, res) => {
         res.status(400).json({message: 'No existen item'});
     }
 }
+
+
+// Buscar MeniItem por id
 
 exports.findMenuItemById = async(req, res) => {
     const db = await findData();
@@ -21,6 +26,9 @@ exports.findMenuItemById = async(req, res) => {
     }
     res.status(200).json(item);
 }
+
+
+// Guardar un MeniItem
 
 exports.saveMenuItem = async(req, res)=>{
     const db = await findData();
@@ -79,6 +87,8 @@ function suppliesValidator(supplies, db){
 }
 
 
+// Actualizar MeniItem
+
 exports.updateMenuItem = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
@@ -113,6 +123,8 @@ exports.updateMenuItem = async (req, res)=>{
 };
 
 
+// Actualizar stock del MeniItem
+
 exports.updateStockItem = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
@@ -128,6 +140,8 @@ exports.updateStockItem = async (req, res)=>{
     res.json({item: item, message: 'Item modificado con éxito'});
 };
 
+
+// Eliminar un MeniItem
 
 exports.deleteMenuItem = async (req, res)=>{
     const db = await findData();

@@ -2,6 +2,8 @@ const {findData, writeData} = require('../data/db.js');
 const Supply = require('../models/Supply.js');
 
 
+// Guardar un suministro
+
 exports.saveSupply = async(req, res)=>{
     const db = await findData();
     const {id, name, category, unitPrice, stock} = req.body;
@@ -29,6 +31,9 @@ exports.saveSupply = async(req, res)=>{
     res.status(201).json({message: 'Suministro guardado con éxito'});
 };
 
+
+// Buscar todos los suministros
+
 exports.findSupplies = async(req, res) => {
     const db = await findData();
     if(db.supply.length !== 0){
@@ -37,6 +42,9 @@ exports.findSupplies = async(req, res) => {
         res.status(400).json({message: 'No existen suministros'});
     }
 }
+
+
+// Buscar suministro por id
 
 exports.findSupplyById = async(req, res) => {
     const db = await findData();
@@ -48,6 +56,9 @@ exports.findSupplyById = async(req, res) => {
     }
     res.status(200).json(supply);
 }
+
+
+// Actualizar suministro
 
 exports.updateSupply = async (req, res)=>{
     const db = await findData();
@@ -76,6 +87,9 @@ exports.updateSupply = async (req, res)=>{
     res.json({supply: db.supply[index], message: 'Supply modificado con éxito'});
 };
 
+
+// Actualizar el stock del suministro
+
 exports.updateStockSupply = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
@@ -90,6 +104,9 @@ exports.updateStockSupply = async (req, res)=>{
     writeData(db);
     res.json({supply: supply, message: 'Supply modificado con éxito'});
 };
+
+
+// Eliminar un suministro
 
 exports.deleteSupply = async (req, res)=>{
     const db = await findData();
