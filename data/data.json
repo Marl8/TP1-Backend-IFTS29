@@ -36,6 +36,13 @@
       "stock": 50
     }
   ],
-  "customer": [],
+  "customer": [
+    {
+      "id": 3,
+      "name": "Nazarena",
+      "phone": "12345678",
+      "address": "Tierra del Fuego"
+    }
+  ],
   "deliveryOrder": []
 }

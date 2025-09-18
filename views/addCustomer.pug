@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h2.mb-4 Agregar Cliente
+
+  form(method="post" action="/customers/save")
+    .mb-3
+      label.form-label(for="id") ID
+      input.form-control(type="number", name="id", required)
+    .mb-3
+      label.form-label(for="name") Nombre
+      input.form-control(type="text", name="name", required)
+    .mb-3
+      label.form-label(for="phone") Teléfono
+      input.form-control(type="text", name="phone", required)
+    .mb-3
+      label.form-label(for="address") Dirección
+      input.form-control(type="text", name="address", required)
+
+    button.btn.btn-success(type="submit") Guardar
+    a.btn.btn-secondary.ms-2(href="/customers") Cancelar

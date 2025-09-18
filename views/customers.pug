@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h2.mb-5.text-center Clientes
+
+  .d-flex.flex-column.align-items-center.g-3
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href= "/add") ➕ Agregar Cliente
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;") 📋 Listar Clientes
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;") ✏️ Editar Cliente
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;") 🗑 Eliminar Cliente
+
+  style.
+    a.btn:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+      transition: all 0.2s;
+    }
