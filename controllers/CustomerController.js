@@ -2,31 +2,94 @@ const Customer = require('../models/Customer.js');
 const {findData, writeData} = require('../data/db.js');
 
 
-exports.saveCustomer = async (req, res)=>{
+// Separo la lógica del negocio de la respuesta.
+// En un futuro deberíamos implementar Services para mejorar el proyecto.
+async function saveCustomerData({id, name, phone, address}) {
     const db = findData();
-    const {id, name, phone, address} = req.body;
+    const numericId = parseInt(id);
 
-    if (!id || !name || !phone|| !address) {
-            return res.status(400).json({ 
-                message: 'Datos incompletos. Se requieren: id, name, phone, address' 
-        });
+    if (!numericId || !name || !phone || !address) {
+        throw new Error('Datos incompletos. Se requieren: id, name, phone, address');
     }
-    const found = db.customer.filter(u => u.id === id);
 
-    if(found.length !== 0){
-        return res.status(400).json({ message: 'Ya existe un Cliente con este id' });
+    const found = db.customer.filter(u => u.id === numericId);
+    if (found.length !== 0) {
+        throw new Error('Ya existe un Cliente con este id');
     }
-    const customer = new Customer(id, name, phone, address);
+
+    const customer = new Customer(numericId, name, phone, address);
     const customerDto = {
         id: customer.getId(),
         name: customer.getName(),
         phone: customer.getPhone(),
         address: customer.getAddress()
-    };    
+    };
+
     db.customer.push(customerDto);
     writeData(db);
-    res.status(201).json({message: 'Cliente guardado con éxito'});
+
+    return customerDto;
+}
+
+// -------------------- SAVE API ---------------------------
+exports.saveCustomerAPI = async (req, res) => {
+    try {
+        const customer = await saveCustomerData(req.body);
+        res.status(201).json({ message: 'Cliente guardado con éxito', customer });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}; 
+
+// -------------------- SAVE web ---------------------------
+exports.saveCustomerWeb = async (req, res) => {
+    try {
+        await saveCustomerData(req.body);
+        res.redirect('/customers?success=1');
+    } catch (err) {
+        res.render('addCustomer', {
+            title: 'Agregar Cliente',
+            error: err.message,
+            oldData: req.body
+        })
+    }
 };
+
+// exports.saveCustomer = async (req, res)=>{
+//     const db = findData();
+//     const {id, name, phone, address} = req.body;
+
+//     if (!id || !name || !phone|| !address) {
+//             return res.status(400).json({ 
+//                 message: 'Datos incompletos. Se requieren: id, name, phone, address' 
+//         });
+//     }
+//     const found = db.customer.filter(u => u.id === id);
+
+//     if(found.length !== 0){
+//         return res.status(400).json({ message: 'Ya existe un Cliente con este id' });
+//     }
+//     const customer = new Customer(id, name, phone, address);
+//     const customerDto = {
+//         id: customer.getId(),
+//         name: customer.getName(),
+//         phone: customer.getPhone(),
+//         address: customer.getAddress()
+//     };    
+//     db.customer.push(customerDto);
+//     writeData(db);
+//     res.status(201).json({message: 'Cliente guardado con éxito'});
+// };
+
+// Listar Clientes
+exports.listCustomers = async (req, res) =>{
+    const db = findData();
+    const customers = db.customer;
+    res.render('listCustomers', {
+    title: 'Listado de Clientes',
+    customers
+   })
+}
 
 exports.findCustomerById = async (req, res)=>{
     const db = findData();

@@ -3,19 +3,23 @@ extends layout
 block content
   h2.mb-4 Agregar Cliente
 
+  if error 
+    script. 
+      alert('Error: !{error}')
+
   form(method="post" action="/customers/save")
     .mb-3
       label.form-label(for="id") ID
-      input.form-control(type="number", name="id", required)
+      input.form-control(type="number", name="id", id="id",autocomplete="off", required)
     .mb-3
       label.form-label(for="name") Nombre
-      input.form-control(type="text", name="name", required)
+      input.form-control(type="text", name="name", id="name",autocomplete="name", required)
     .mb-3
       label.form-label(for="phone") Teléfono
-      input.form-control(type="text", name="phone", required)
+      input.form-control(type="text", name="phone", id="phone",autocomplete="tel", required)
     .mb-3
       label.form-label(for="address") Dirección
-      input.form-control(type="text", name="address", required)
+      input.form-control(type="text", name="address", id="address",autocomplete="street-address", required)
 
     button.btn.btn-success(type="submit") Guardar
     a.btn.btn-secondary.ms-2(href="/customers") Cancelar
