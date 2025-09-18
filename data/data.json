@@ -34,6 +34,108 @@
       "price": 6500,
       "category": "minuta",
       "stock": 50
+    },
+    {
+      "id": 6,
+      "name": "empanada",
+      "price": 2500,
+      "category": "minuta",
+      "stock": 74,
+      "listSupplies": [
+        {
+          "id": 2,
+          "name": "Carne",
+          "category": "Comestible",
+          "unitPrice": 5000,
+          "stock": 25
+        },
+        {
+          "id": 3,
+          "name": "Pan de hamburguesa",
+          "category": "Comestible",
+          "unitPrice": 120,
+          "stock": 100
+        },
+        {
+          "id": 4,
+          "name": "Queso cheddar",
+          "category": "Comestible",
+          "unitPrice": 1500,
+          "stock": 10
+        }
+      ]
+    }
+  ],
+  "supply": [
+    {
+      "id": 1,
+      "name": "Harina",
+      "category": "Comestible",
+      "unitPrice": 750,
+      "stock": 30
+    },
+    {
+      "id": 2,
+      "name": "Carne",
+      "category": "Comestible",
+      "unitPrice": 5000,
+      "stock": 25
+    },
+    {
+      "id": 3,
+      "name": "Pan de hamburguesa",
+      "category": "Comestible",
+      "unitPrice": 120,
+      "stock": 100
+    },
+    {
+      "id": 4,
+      "name": "Queso cheddar",
+      "category": "Comestible",
+      "unitPrice": 1500,
+      "stock": 10
+    },
+    {
+      "id": 5,
+      "name": "Lechuga",
+      "category": "Comestible",
+      "unitPrice": 800,
+      "stock": 5
+    },
+    {
+      "id": 6,
+      "name": "Tomate",
+      "category": "Comestible",
+      "unitPrice": 900,
+      "stock": 8
+    },
+    {
+      "id": 7,
+      "name": "Papa",
+      "category": "Comestible",
+      "unitPrice": 600,
+      "stock": 50
+    },
+    {
+      "id": 8,
+      "name": "Aceite para freír",
+      "category": "Comestible",
+      "unitPrice": 2500,
+      "stock": 15
+    },
+    {
+      "id": 9,
+      "name": "Mozzarella",
+      "category": "Comestible",
+      "unitPrice": 3000,
+      "stock": 20
+    },
+    {
+      "id": 10,
+      "name": "Salsa de tomate",
+      "category": "Comestible",
+      "unitPrice": 1000,
+      "stock": 12
     }
   ],
   "customer": [],

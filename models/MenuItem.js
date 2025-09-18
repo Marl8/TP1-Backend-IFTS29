@@ -5,6 +5,7 @@ class MenuItem{
     #price;
     #category;
     #stock;
+    #listSupplies;
 
     constructor(id, name, price, category, stock){
         this.#id = id;
@@ -12,9 +13,10 @@ class MenuItem{
         this.#price = price;
         this.#category = category;
         this.#stock = stock;
+        this.#listSupplies = []; 
     }
 
-    getid(){
+    getId(){
         return this.#id;
     }
 
@@ -48,6 +50,18 @@ class MenuItem{
 
     setStock(stock){
         return this.#stock = stock;        
+    }
+
+    setSupplies(listSupplies) {
+        this.#listSupplies = listSupplies;
+    }
+
+    removeSupply(index) { 
+        this.#listSupplies.splice(index, 1); 
+    }
+    
+    getSupplies() { 
+        return [...this.#listSupplies]; 
     }
 }
 
