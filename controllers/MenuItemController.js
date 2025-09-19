@@ -1,6 +1,5 @@
 const {findData, writeData} = require('../data/db.js');
 const MenuItem = require('../models/MenuItem.js');
-const Supply = require('../models/Supply.js');
 
 
 // Buscar MenuItems
@@ -65,27 +64,6 @@ exports.saveMenuItem = async(req, res)=>{
     writeData(db);
     res.status(201).json({message: 'Item guardado con éxito'});
 };
-
-function suppliesValidator(supplies, db){
-    const validSupplies = [];
-    const invalidSupplies = [];
-
-    supplies.forEach(supplyId => {
-        const supply = db.supply.find(supply => supply.id === supplyId);
-        if (supply) {
-            validSupplies.push({
-                id: supply.id,
-                name: supply.name,
-                category: supply.category,
-                unitPrice: supply.unitPrice,
-                stock: supply.stock
-            });
-        } else {
-            invalidSupplies.push(supplyId);
-        }
-    });
-    return {invalidSupplies, validSupplies}
-}
 
 
 // Actualizar MenuItem
@@ -165,3 +143,23 @@ exports.deleteMenuItem = async (req, res)=>{
 };
 
 
+function suppliesValidator(supplies, db){
+    const validSupplies = [];
+    const invalidSupplies = [];
+
+    supplies.forEach(supplyId => {
+        const supply = db.supply.find(supply => supply.id === supplyId);
+        if (supply) {
+            validSupplies.push({
+                id: supply.id,
+                name: supply.name,
+                category: supply.category,
+                unitPrice: supply.unitPrice,
+                stock: supply.stock
+            });
+        } else {
+            invalidSupplies.push(supplyId);
+        }
+    });
+    return {invalidSupplies, validSupplies}
+}
