@@ -1,5 +1,5 @@
 const {findData, writeData} = require('../data/db.js');
-const MenuItem = require('../models/MenuItem.js')
+const MenuItem = require('../models/MenuItem.js');
 
 
 // Buscar MenuItems
@@ -65,27 +65,6 @@ exports.saveMenuItem = async(req, res)=>{
     res.status(201).json({message: 'Item guardado con éxito'});
 };
 
-function suppliesValidator(supplies, db){
-    const validSupplies = [];
-    const invalidSupplies = [];
-
-    supplies.forEach(supplyId => {
-        const supply = db.supply.find(supply => supply.id === supplyId);
-        if (supply) {
-            validSupplies.push({
-                id: supply.id,
-                name: supply.name,
-                category: supply.category,
-                unitPrice: supply.unitPrice,
-                stock: supply.stock
-            });
-        } else {
-            invalidSupplies.push(supplyId);
-        }
-    });
-    return {invalidSupplies, validSupplies}
-}
-
 
 // Actualizar MenuItem
 
@@ -125,21 +104,28 @@ exports.updateMenuItem = async (req, res)=>{
 
 // Actualizar stock del MenuItem
 
-exports.updateStockItem = async (req, res)=>{
+exports.updateStockItem = async (req, res) => {
     const db = await findData();
     const id = parseInt(req.params.id);
-
-    const item = db.MenuItem.find(item => item.id === id);
-
-    if(!item){
-        return res.status(400).send('Supply no encontrado');
-    }  
-
-    Object.assign(item, req.body);          
+    const itemData = db.MenuItem.find(item => item.id === id);
+    
+    if (!itemData) {
+        return res.status(400).send('Item no encontrado');
+    }
+    
+    if (itemData.listSupplies.length > 0) {
+        itemData.listSupplies.forEach(supply => {
+            supply.stock = supply.stock - 1;
+        });
+    }
+    itemData.stock = itemData.stock - 1;
     writeData(db);
-    res.json({item: item, message: 'Item modificado con éxito'});
+    
+    res.json({
+        item: itemData, 
+        message: 'Stock de supplies actualizado con éxito'
+    });
 };
-
 
 // Eliminar un MenuItem
 
@@ -155,3 +141,25 @@ exports.deleteMenuItem = async (req, res)=>{
     writeData(db);
     res.status(200).json({message: 'Item Borrado con éxito'}); 
 };
+
+
+function suppliesValidator(supplies, db){
+    const validSupplies = [];
+    const invalidSupplies = [];
+
+    supplies.forEach(supplyId => {
+        const supply = db.supply.find(supply => supply.id === supplyId);
+        if (supply) {
+            validSupplies.push({
+                id: supply.id,
+                name: supply.name,
+                category: supply.category,
+                unitPrice: supply.unitPrice,
+                stock: supply.stock
+            });
+        } else {
+            invalidSupplies.push(supplyId);
+        }
+    });
+    return {invalidSupplies, validSupplies}
+}
