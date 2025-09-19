@@ -153,21 +153,9 @@
     },
     {
       "id": 3,
-      "name": "cris",
-      "phone": "564646545",
-      "address": "mdq"
-    },
-    {
-      "id": 4,
-      "name": "juan",
-      "phone": "564646545",
-      "address": "muy muy lejano"
-    },
-    {
-      "id": 5,
-      "name": "estella",
-      "phone": "123928371",
-      "address": "akdjahsd"
+      "name": "Anibal Sosa",
+      "phone": "221569876",
+      "address": "Santa Fe 1236"
     }
   ],
   "deliveryOrder": [
