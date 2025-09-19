@@ -126,12 +126,6 @@
   ],
   "customer": [
     {
-      "id": 100,
-      "name": "Juan Perez",
-      "phone": "23456789",
-      "address": "Av. Siempre Viva 742"
-    },
-    {
       "id": 2,
       "name": "gabriela",
       "phone": "12345678",

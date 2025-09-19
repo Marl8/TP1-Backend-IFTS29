@@ -23,7 +23,8 @@ block content
             td #{customer.address}
             td
               a.btn.btn-sm.btn(style="background-color:#343a40; color:white; border:none;", href=`/customers/update?id=${customer.id}`) ✏️
-              //Boton deshabilitado por falta de funcionalidad, cuando la desarrollemos quitar estilos y disabled.
-              a.btn.btn-sm.btn-danger.ms-2(style="pointer-events: none; opacity: 0.5;", href=`/customers/delete/${customer.id}`, disabled) 🗑️ 
+              
+              form(action=`/customers/delete/${customer.id}?_method=DELETE`, method="POST", style="display:inline")
+                button(type="submit", class="btn btn-sm btn-danger ms-2") 🗑️ 
   else
     p.text-muted No hay clientes registrados aún.
