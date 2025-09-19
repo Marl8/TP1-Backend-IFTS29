@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h2.mb-5.text-center Clientes
+
+  // Mensaje de éxito o error
+  if query.success
+    script.
+      alert('Cliente guardado con éxito!');
+  if query.error
+    script.
+      alert('Error: ');
+
+  .d-flex.flex-column.align-items-center.g-3
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href= "/customers/add") ➕ Agregar Cliente
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href= "/customers/list") 📋 Listar Clientes
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href= "/customers/update") ✏️ Editar Cliente
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;") 🗑 Eliminar Cliente
+
+  style.
+    a.btn:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+      transition: all 0.2s;
+    }

@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  h2.mb-4 Listado de Clientes 
+  
+  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+
+  if customers.length
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+          th ID
+          th Nombre
+          th Teléfono
+          th Dirección
+          th Acciones
+      tbody
+        each customer in customers
+          tr
+            td #{customer.id}
+            td #{customer.name}
+            td #{customer.phone}
+            td #{customer.address}
+            td
+              a.btn.btn-sm.btn(style="background-color:#343a40; color:white; border:none;", href=`/customers/update?id=${customer.id}`) ✏️
+              //Boton deshabilitado por falta de funcionalidad, cuando la desarrollemos quitar estilos y disabled.
+              a.btn.btn-sm.btn-danger.ms-2(style="pointer-events: none; opacity: 0.5;", href=`/customers/delete/${customer.id}`, disabled) 🗑️ 
+  else
+    p.text-muted No hay clientes registrados aún.
