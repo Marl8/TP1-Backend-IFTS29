@@ -47,21 +47,7 @@
           "name": "Carne",
           "category": "Comestible",
           "unitPrice": 5000,
-          "stock": 25
-        },
-        {
-          "id": 3,
-          "name": "Pan de hamburguesa",
-          "category": "Comestible",
-          "unitPrice": 120,
-          "stock": 100
-        },
-        {
-          "id": 4,
-          "name": "Queso cheddar",
-          "category": "Comestible",
-          "unitPrice": 1500,
-          "stock": 10
+          "stock": 24
         }
       ]
     }
