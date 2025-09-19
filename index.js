@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
+const methodOverride = require('method-override');
 const CustomerRoutes = require('./routes/CustomerRoutes.js');
 const WebCustomerRoutes = require('./routes/WebCustomerRoutes.js');
 const MenuItemRoutes = require('./routes/MenuItemRoutes.js');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
+
+app.use(methodOverride('_method'));
 
 app.set('view engine', 'pug');
 app.set('views', './views');

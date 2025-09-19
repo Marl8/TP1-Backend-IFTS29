@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h2.mb-4 Eliminar Cliente
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+
+  form(method="get" action="/customers/delete")
+    .mb-3.d-flex.flex-column
+      label.form-label(for="id") Ingresa el ID del cliente a eliminar
+      input.form-control(type="number", name="id", id="id", required value=id)
+      button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
+
+  // Mostrar cliente encontrado
+  if customer
+    hr
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+          th ID
+          th Nombre
+          th Teléfono
+          th Dirección
+      tbody
+        tr
+          td #{customer.id}
+          td #{customer.name}
+          td #{customer.phone}
+          td #{customer.address}
+
+    // Botones de acción fuera de la tabla
+    form(action=`/customers/delete/${customer.id}?_method=DELETE`, method="POST", style="display:inline")
+      button.btn.btn-danger.mt-3(type="submit") 🗑️ Eliminar
+
+    a.btn.btn-secondary.mt-3.ms-2(href="/customers/delete") Cancelar
+
+  // Mensaje de error si no se encuentra el cliente
+  if error
+    p.text-danger.mt-2 #{error}

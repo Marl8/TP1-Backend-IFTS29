@@ -1,11 +1,7 @@
 const Customer = require('../models/Customer.js');
 const {findData, writeData} = require('../data/db.js');
 
-
 // Guargar un nuevo cliente
-
-// Separo la lógica del negocio de la respuesta.
-// En un futuro deberíamos implementar Services para mejorar el proyecto.
 async function saveCustomerData({id, name, phone, address}) {
     const db = findData();
     const numericId = parseInt(id);
@@ -88,25 +84,45 @@ exports.findCustomerByIdAPI = (req, res) => {
 }
 
 // ---------- Res Buscar para Web --------
-exports.findCustomerByIdWeb = async (req, res) => {
-    const id = parseInt(req.query.id) ; // viene del input del formulario
+exports.findCustomerByIdWeb = async (id) => {
+    const db = findData();
+    const customer = db.customer.find(c => c.id === id);
+    if (!customer) {
+        throw new Error('Cliente no encontrado');
+    }
+    return customer;
+};
+
+exports.showCustomerToEdit = async (req, res) => {
+    const id = parseInt(req.query.id);
     let customer = null;
     let error = null;
 
-    // Solo busco si realmente vino un id
     if (!isNaN(id)) {
         try {
             customer = await exports.findCustomerById(id);
         } catch (err) {
-            error = err.message; // "Cliente no encontrado"
+            error = err.message;
         }
     }
 
-    res.render('updateCustomer', { 
-        title: 'Editar Cliente', 
-        customer, 
-        error 
-    });
+    res.render('updateCustomer', { id, customer, error });
+};
+
+exports.showCustomerToDelete = async (req, res) => {
+    const id = parseInt(req.query.id);
+    let customer = null;
+    let error = null;
+
+    if (!isNaN(id)) {
+        try {
+            customer = await exports.findCustomerById(id);
+        } catch (err) {
+            error = err.message;
+        }
+    }
+
+    res.render('deleteCustomer', { id, customer, error });
 };
 
 
@@ -151,29 +167,47 @@ exports.updateCustomerWeb = async (req, res) => {
     const result = await exports.updateCustomer(id, req.body);
 
     if (result.error) {
-        // Si hay error, volvemos al formulario de edición con alert
         return res.render('editCustomer', { 
             title: 'Editar Cliente', 
             error: result.error,
             customer: { ...req.body, id }
         });
     }
-
-    // Si todo OK, redirigimos a la lista de clientes con mensaje de éxito
     res.redirect(`/customers?success=${encodeURIComponent(result.message)}`);
 };
 
-// Eliminar cliente. TODO: plantilla
+// Eliminar cliente. 
 
-exports.deleteCustomer = async (req, res)=>{
+async function deleteCustomer (id) {
     const db = findData();
-    const id = parseInt(req.params.id);
     const i = db.customer.length; 
     db.customer = db.customer.filter(u => u.id !== id);
 
     if (db.customer.length === i){
-        return res.status(400).send('Usuario no encontrado');
+        return null;
     } 
     writeData(db);
-    res.status(200).json({message: 'Borrado con éxito'}); 
+    return true;
+}
+
+exports.deleteCustomerAPI = async (req, res) => {
+    const id = parseInt(req.params.id);
+    const result = await deleteCustomer(id);
+
+    if (!result){
+        return res.status(400).json({error: 'Usuario no encontrado'});
+    }
+
+    res.status(200).json( {message: 'Borrado con éxito'});
+}
+
+exports.deleteCustomerWeb = async (req, res) => {
+    const id = parseInt(req.params.id);
+    const result = await deleteCustomer(id);
+
+    if (!result) {
+        return res.status(400).send('Usuario no encontrado');
+    }
+
+    res.redirect('/customers/list'); // vuelve al listado
 };

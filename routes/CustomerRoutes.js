@@ -6,6 +6,6 @@ const CustomerController = require('../controllers/CustomerController.js');
 router.post('/saveCustomer', CustomerController.saveCustomerAPI); 
 router.get('/findCustomer/:id', CustomerController.findCustomerByIdAPI);
 router.put('/updateCustomer/:id', CustomerController.updateCustomerAPI);
-router.delete('/deleteCustomer/:id', CustomerController.deleteCustomer);
+router.delete('/deleteCustomer/:id', CustomerController.deleteCustomerAPI);
 
 module.exports = router;
