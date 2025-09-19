@@ -14,7 +14,10 @@ router.get('/customers', (req, res) => {
 });
 router.get('/customers/add', (req, res) => res.render('addCustomer', {title: 'Agregar Cliente'}));
 router.get('/customers/list', CustomerController.listCustomers);
+router.get('/customers/update', CustomerController.findCustomerByIdWeb);
 
 router.post('/customers/save', CustomerController.saveCustomerWeb);
+router.post('/customers/update/:id', CustomerController.updateCustomerWeb);
+
 
 module.exports = router;

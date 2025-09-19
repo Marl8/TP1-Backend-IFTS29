@@ -3,6 +3,8 @@ extends layout
 block content
   h2.mb-4 Agregar Cliente
 
+  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+
   if error 
     script. 
       alert('Error: !{error}')
