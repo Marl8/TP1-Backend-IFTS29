@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+    .row.justify-content-center.g-4
+        .col-md-4
+            .card.shadow.text-center
+                .card-body
+                    h5.card-title 👤 Clientes
+                    p.card-text Administra los clientes registrados en el sistema.
+                    a.btn.btn-primary(href="/customers") Ir a CRUD Cliente
+        .col-md-4
+            .card.shadow.text-center
+                .card-body
+                    h5.card-title 🛒 Pedidos
+                    p.card-text Gestiona los pedidos de los clientes.
+                    a.btn.btn-success(href="/delivery") Ir a CRUD Pedido
