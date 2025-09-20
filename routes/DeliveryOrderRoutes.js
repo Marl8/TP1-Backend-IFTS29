@@ -19,6 +19,11 @@ router.post('/confirm-external/:id', DeliveryOrderController.confirmarPedidoExte
 
 // DESPACHAR PEDIDO (CAMBIAR ESTADO A "dispatched")
 router.post('/dispatch/:id', DeliveryOrderController.despacharPedido);
+// GET con query param
+router.get('/filter', DeliveryOrderController.filtrarPorPlataforma);
+
+// POST con body
+router.post('/filter', DeliveryOrderController.filtrarPorPlataforma);
 
 module.exports = router;
 

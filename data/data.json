@@ -12,7 +12,7 @@
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 40
+      "stock": 39
     },
     {
       "id": 3,
@@ -216,6 +216,21 @@
       "status": "preparing",
       "total": 9000,
       "plataforma": "Rappi"
+    },
+    {
+      "id": 1758377575686,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 4000,
+      "plataforma": "Propia"
     }
   ],
   "externalOrders": [

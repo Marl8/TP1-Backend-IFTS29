@@ -172,13 +172,51 @@ async function despacharPedido(req, res) {
     res.status(200).json({ message: 'Pedido despachado', pedido });
 }
 
+/**
+ * Filtrar pedidos por plataforma
+ * Incluye:
+ *  - pedidos confirmados (deliveryOrder)
+ *  - pedidos externos pending (externalOrders) si la plataforma es externa
+ */
+async function filtrarPorPlataforma(req, res) {
+    const { plataforma } = req.query || req.body; // soporta GET query o POST body
+
+    if (!plataforma) {
+        return res.status(400).json({ message: "Debe indicar la plataforma" });
+    }
+
+    const db = findData();
+
+    // Filtrar pedidos confirmados
+    let pedidos = (db.deliveryOrder || []).filter(p => 
+        p.plataforma && p.plataforma.toLowerCase() === plataforma.toLowerCase()
+    );
+
+    // Si es plataforma externa, agregar los pending de externalOrders
+    if (EXTERNAL_PLATFORMS.includes(plataforma)) {
+        const externosPendientes = (db.externalOrders || []).filter(p =>
+            p.plataforma.toLowerCase() === plataforma.toLowerCase() &&
+            p.status.toLowerCase() === "pending"
+        );
+        pedidos = pedidos.concat(externosPendientes);
+    }
+
+    res.status(200).json(pedidos);
+}
+
+module.exports = {
+    filtrarPorPlataforma
+};
+
+
 module.exports = {
     crearPedido,
     crearPedidoExterno,
     listarPedidos,
     listarPedidosExternos,
     confirmarPedidoExterno,
-    despacharPedido
+    despacharPedido,
+    filtrarPorPlataforma
 };
 
 
