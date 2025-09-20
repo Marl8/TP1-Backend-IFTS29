@@ -204,9 +204,7 @@ async function filtrarPorPlataforma(req, res) {
     res.status(200).json(pedidos);
 }
 
-module.exports = {
-    filtrarPorPlataforma
-};
+
 
 
 module.exports = {

@@ -15,7 +15,7 @@ router.get('/', DeliveryOrderController.listarPedidos);
 router.get('/external-pending', DeliveryOrderController.listarPedidosExternos);
 
 // CONFIRMAR PEDIDO EXTERNO Y PASAR A PREPARING
-router.post('/confirm-external/:id', DeliveryOrderController.confirmarPedidoExterno);
+router.patch('/confirm-external/:id', DeliveryOrderController.confirmarPedidoExterno);
 
 // DESPACHAR PEDIDO (CAMBIAR ESTADO A "dispatched")
 router.post('/dispatch/:id', DeliveryOrderController.despacharPedido);
