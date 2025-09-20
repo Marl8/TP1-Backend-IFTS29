@@ -12,7 +12,7 @@
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 41
+      "stock": 36
     },
     {
       "id": 3,
@@ -136,6 +136,12 @@
       "name": "Anibal Sosa",
       "phone": "221569876",
       "address": "Santa Fe 1236"
+    },
+    {
+      "id": 102,
+      "name": "Luis Davila",
+      "phone": "116669999",
+      "address": "Calle Falsa 99"
     }
   ],
   "deliveryOrder": [
@@ -288,6 +294,36 @@
       "status": "preparing",
       "total": 6000,
       "plataforma": "PedidosYa"
+    },
+    {
+      "id": 1758366197793,
+      "customerId": 102,
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 4
+        }
+      ],
+      "status": "preparing",
+      "total": 16000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758366340057,
+      "customerId": 102,
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 4000,
+      "plataforma": "Uber Eats"
     }
   ],
   "externalOrders": [

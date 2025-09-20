@@ -6,7 +6,7 @@ class DeliveryOrder {
     #total;
     //#assignedRiderId;
     #estimatedTime;
-    #plataforma;  // Singular, ya no es un array
+    #plataforma;  
 
     constructor(id, customerId, total, status = 'preparing', plataforma = 'Propia') {
         this.#id = id;
