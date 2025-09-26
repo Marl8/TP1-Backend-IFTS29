@@ -1,10 +1,10 @@
-const {findData, writeData} = require('../data/db.js');
-const Supply = require('../models/Supply.js');
+import {findData, writeData} from '../data/db.js';
+import Supply from '../models/Supply.js';
 
 
 // Guardar un suministro
 
-exports.saveSupply = async(req, res)=>{
+const saveSupply = async(req, res)=>{
     const db = await findData();
     const {id, name, category, unitPrice, stock} = req.body;
 
@@ -34,7 +34,7 @@ exports.saveSupply = async(req, res)=>{
 
 // Buscar todos los suministros
 
-exports.findSupplies = async(req, res) => {
+const findSupplies = async(req, res) => {
     const db = await findData();
     if(db.supply.length !== 0){
         res.status(200).json(db.supply);
@@ -46,7 +46,7 @@ exports.findSupplies = async(req, res) => {
 
 // Buscar suministro por id
 
-exports.findSupplyById = async(req, res) => {
+const findSupplyById = async(req, res) => {
     const db = await findData();
     const id = parseInt(req.params.id);
     const supply = db.supply.find(i => i.id === id);
@@ -60,7 +60,7 @@ exports.findSupplyById = async(req, res) => {
 
 // Actualizar suministro
 
-exports.updateSupply = async (req, res)=>{
+const updateSupply = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
 
@@ -90,7 +90,7 @@ exports.updateSupply = async (req, res)=>{
 
 // Actualizar el stock del suministro
 
-exports.updateStockSupply = async (req, res)=>{
+const updateStockSupply = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
 
@@ -108,7 +108,7 @@ exports.updateStockSupply = async (req, res)=>{
 
 // Eliminar un suministro
 
-exports.deleteSupply = async (req, res)=>{
+const deleteSupply = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
 
@@ -121,3 +121,14 @@ exports.deleteSupply = async (req, res)=>{
     writeData(db);
     res.status(200).json({message: 'Supply Borrado con éxito'}); 
 };
+
+const SupplyController = {
+    saveSupply,
+    findSupplies,
+    findSupplyById,
+    updateSupply,
+    updateStockSupply,
+    deleteSupply
+}
+
+export default SupplyController;

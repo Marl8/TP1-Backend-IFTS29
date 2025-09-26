@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const app = express();
 const PORT = 3000;
-const methodOverride = require('method-override');
-const CustomerRoutes = require('./routes/CustomerRoutes.js');
-const WebCustomerRoutes = require('./routes/WebCustomerRoutes.js');
-const SupplyRoutes = require('./routes/SupplyRoutes.js');
-const DeliveryOrderRoutes = require('./routes/DeliveryOrderRoutes.js');
-const MenuItemRoutes = require('./routes/MenuItemRoutes.js');
+import methodOverride from 'method-override';
+import CustomerRoutes from './routes/CustomerRoutes.js';
+import WebCustomerRoutes from './routes/WebCustomerRoutes.js';
+import SupplyRoutes from './routes/SupplyRoutes.js';
+import DeliveryOrderRoutes from './routes/DeliveryOrderRoutes.js';
+import MenuItemRoutes from './routes/MenuItemRoutes.js';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));

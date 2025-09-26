@@ -1,5 +1,5 @@
-const Customer = require('../models/Customer.js');
-const {findData, writeData} = require('../data/db.js');
+import Customer from '../models/Customer.js';
+import {findData, writeData} from '../data/db.js';
 
 // Guargar un nuevo cliente
 async function saveCustomerData({id, name, phone, address}) {
@@ -30,7 +30,7 @@ async function saveCustomerData({id, name, phone, address}) {
 };
 
 // -------------------- SAVE API ---------------------------
-exports.saveCustomerAPI = async (req, res) => {
+const saveCustomerAPI = async (req, res) => {
     try {
         const customer = await saveCustomerData(req.body);
         res.status(201).json({ message: 'Cliente guardado con éxito', customer });
@@ -40,7 +40,7 @@ exports.saveCustomerAPI = async (req, res) => {
 }; 
 
 // -------------------- SAVE web ---------------------------
-exports.saveCustomerWeb = async (req, res) => {
+const saveCustomerWeb = async (req, res) => {
     try {
         await saveCustomerData(req.body);
         res.redirect('/customers?success=1');
@@ -54,17 +54,17 @@ exports.saveCustomerWeb = async (req, res) => {
 };
 
 // Listar Clientes
-exports.listCustomers = async (req, res) =>{
+const listCustomers = async (req, res) =>{
     const db = findData();
     const customers = db.customer;
     res.render('listCustomers', {
     title: 'Listado de Clientes',
     customers
-   })
+    })
 }
 
 // Buscar por ID, devuelvo customer
-exports.findCustomerById = (id) => {
+const findCustomerById = (id) => {
     const db = findData();
     const customer = db.customer.find(c => c.id === id);
     if (!customer) throw new Error ('Cliente no encontrado');
@@ -73,10 +73,10 @@ exports.findCustomerById = (id) => {
 }
 
 // ---------Res Buscar para API -----------
-exports.findCustomerByIdAPI = (req, res) => {
+const findCustomerByIdAPI = (req, res) => {
     try{
         const id = parseInt(req.params.id);
-        const customer = exports.findCustomerById(id);
+        const customer = findCustomerById(id);
         res.status(200).json(customer);
     } catch (err) {
         res.status(400).json({message: err.message});
@@ -84,7 +84,7 @@ exports.findCustomerByIdAPI = (req, res) => {
 }
 
 // ---------- Res Buscar para Web --------
-exports.findCustomerByIdWeb = async (id) => {
+const findCustomerByIdWeb = async (id) => {
     const db = findData();
     const customer = db.customer.find(c => c.id === id);
     if (!customer) {
@@ -93,7 +93,7 @@ exports.findCustomerByIdWeb = async (id) => {
     return customer;
 };
 
-exports.showCustomerToEdit = async (req, res) => {
+const showCustomerToEdit = async (req, res) => {
     const id = parseInt(req.query.id);
     let customer = null;
     let error = null;
@@ -109,7 +109,7 @@ exports.showCustomerToEdit = async (req, res) => {
     res.render('updateCustomer', { id, customer, error });
 };
 
-exports.showCustomerToDelete = async (req, res) => {
+const showCustomerToDelete = async (req, res) => {
     const id = parseInt(req.query.id);
     let customer = null;
     let error = null;
@@ -128,7 +128,7 @@ exports.showCustomerToDelete = async (req, res) => {
 
 // Actualizar cliente
 
-exports.updateCustomer = (id, {name, phone, address})=>{
+const updateCustomer = (id, {name, phone, address})=>{
     const db = findData();
     const index = db.customer.findIndex(c => c.id === id);
     if (!name || !phone|| !address) {
@@ -150,7 +150,7 @@ exports.updateCustomer = (id, {name, phone, address})=>{
 
 
 // Actualiza para API
-exports.updateCustomerAPI = async (req, res) => {
+const updateCustomerAPI = async (req, res) => {
     const id = parseInt(req.params.id || req.body.id);
     const result = await exports.updateCustomer(id, req.body);
 
@@ -162,7 +162,7 @@ exports.updateCustomerAPI = async (req, res) => {
 };
 
 //Actualiza para WEB
-exports.updateCustomerWeb = async (req, res) => {
+const updateCustomerWeb = async (req, res) => {
     const id = parseInt(req.params.id || req.body.id);
     const result = await exports.updateCustomer(id, req.body);
 
@@ -190,7 +190,7 @@ async function deleteCustomer (id) {
     return true;
 }
 
-exports.deleteCustomerAPI = async (req, res) => {
+const deleteCustomerAPI = async (req, res) => {
     const id = parseInt(req.params.id);
     const result = await deleteCustomer(id);
 
@@ -201,7 +201,7 @@ exports.deleteCustomerAPI = async (req, res) => {
     res.status(200).json( {message: 'Borrado con éxito'});
 }
 
-exports.deleteCustomerWeb = async (req, res) => {
+const deleteCustomerWeb = async (req, res) => {
     const id = parseInt(req.params.id);
     const result = await deleteCustomer(id);
 
@@ -211,3 +211,20 @@ exports.deleteCustomerWeb = async (req, res) => {
 
     res.redirect('/customers/list'); // vuelve al listado
 };
+
+
+const CustomerController = {
+    saveCustomerAPI, 
+    saveCustomerWeb,
+    listCustomers,
+    findCustomerByIdAPI,
+    findCustomerByIdWeb,
+    showCustomerToEdit,
+    showCustomerToDelete,
+    updateCustomerAPI,
+    updateCustomerWeb,
+    deleteCustomerAPI,
+    deleteCustomerWeb
+}
+
+export default CustomerController;

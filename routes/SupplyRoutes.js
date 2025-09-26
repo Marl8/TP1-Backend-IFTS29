@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const SupplyController = require('../controllers/SupplyController.js');
+import SupplyController from '../controllers/SupplyController.js';
 
 
 router.post('/saveSupply', SupplyController.saveSupply);
@@ -11,4 +11,4 @@ router.patch('/updateStockSupply/:id', SupplyController.updateStockSupply);
 router.delete('/deleteSupply/:id', SupplyController.deleteSupply);
 
 
-module.exports = router;
+export default router;

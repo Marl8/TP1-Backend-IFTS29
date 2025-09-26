@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { findData } = require('../data/db.js');
-const CustomerController = require('../controllers/CustomerController.js')
+import { findData } from '../data/db.js';
+import CustomerController from '../controllers/CustomerController.js';
 
 
 router.get('/', (req, res) => {
@@ -22,4 +22,4 @@ router.post('/customers/update/:id', CustomerController.updateCustomerWeb);
 router.delete('/customers/delete/:id', CustomerController.deleteCustomerWeb);
 
 
-module.exports = router;
+export default router;

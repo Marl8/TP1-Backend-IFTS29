@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const MenuItemController = require('../controllers/MenuItemController.js');
+import MenuItemController from '../controllers/MenuItemController.js';
 
 router.get('/findMenuItems', MenuItemController.findMenuItems);
 router.get('/findMenuItem/:id', MenuItemController.findMenuItemById);
@@ -9,4 +9,4 @@ router.put('/updateMenuItem/:id', MenuItemController.updateMenuItem);
 router.patch('/updateStockItem/:id', MenuItemController.updateStockItem);
 router.delete('/deleteMenuItem/:id', MenuItemController.deleteMenuItem);
 
-module.exports = router;
+export default router;

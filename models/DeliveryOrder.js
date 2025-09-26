@@ -88,6 +88,6 @@ class DeliveryOrder {
     }
 }
 
-module.exports = DeliveryOrder;
+export default DeliveryOrder;
 
 

@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const DeliveryOrderController = require('../controllers/DeliveryOrderController');
+import DeliveryOrderController from '../controllers/DeliveryOrderController.js';
 
 // Crear un nuevo pedido
 router.post('/', DeliveryOrderController.crearPedido);
@@ -18,4 +18,4 @@ router.get('/external/pending', DeliveryOrderController.listarPedidosExternos);
 //router.post('/external/confirm/:id', DeliveryOrderController.confirmarPedidoExterno);
 router.patch('/external/confirm/:id', DeliveryOrderController.confirmarPedidoExterno);
 
-module.exports = router;
+export default router;

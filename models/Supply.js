@@ -51,4 +51,4 @@ class Supply {
     }
 }
 
-module.exports = Supply;
+export default Supply;

@@ -1,5 +1,5 @@
-const DeliveryOrder = require('../models/DeliveryOrder');
-const { findData, writeData } = require('../data/db');
+import DeliveryOrder from '../models/DeliveryOrder.js';
+import { findData, writeData } from '../data/db.js';
 
 // Crear un nuevo pedido
 async function crearPedido(req, res) {
@@ -122,12 +122,15 @@ async function confirmarPedidoExterno(req, res) {
     });
 }
 
-// Exportar TODO
-module.exports = {
+const DeliveryOrderController = {
     crearPedido,
     listarPedidos,
     listarPedidosPorPlataforma,
     listarPedidosExternos,
     confirmarPedidoExterno
 };
+
+
+// Exportar TODO
+export default DeliveryOrderController;
 

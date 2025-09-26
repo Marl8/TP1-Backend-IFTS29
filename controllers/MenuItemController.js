@@ -1,10 +1,10 @@
-const {findData, writeData} = require('../data/db.js');
-const MenuItem = require('../models/MenuItem.js');
+import {findData, writeData} from '../data/db.js';
+import MenuItem from'../models/MenuItem.js';
 
 
 // Buscar MenuItems
 
-exports.findMenuItems = async(req, res) => {
+const findMenuItems = async(req, res) => {
     const db = await findData();
     if(db.MenuItem.length !== 0){
         res.status(200).json(db.MenuItem);
@@ -16,7 +16,7 @@ exports.findMenuItems = async(req, res) => {
 
 // Buscar MenuItem por id
 
-exports.findMenuItemById = async(req, res) => {
+const findMenuItemById = async(req, res) => {
     const db = await findData();
     const id = parseInt(req.params.id);
     const item = db.MenuItem.find(i => i.id === id);
@@ -30,7 +30,7 @@ exports.findMenuItemById = async(req, res) => {
 
 // Guardar un MenuItem
 
-exports.saveMenuItem = async(req, res)=>{
+const saveMenuItem = async(req, res)=>{
     const db = await findData();
     const {id, name, price, category, stock, listSupplies} = req.body;
 
@@ -68,7 +68,7 @@ exports.saveMenuItem = async(req, res)=>{
 
 // Actualizar MenuItem
 
-exports.updateMenuItem = async (req, res)=>{
+const updateMenuItem = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
 
@@ -104,7 +104,7 @@ exports.updateMenuItem = async (req, res)=>{
 
 // Actualizar stock del MenuItem
 
-exports.updateStockItem = async (req, res) => {
+const updateStockItem = async (req, res) => {
     const db = await findData();
     const id = parseInt(req.params.id);
     const itemData = db.MenuItem.find(item => item.id === id);
@@ -129,7 +129,7 @@ exports.updateStockItem = async (req, res) => {
 
 // Eliminar un MenuItem
 
-exports.deleteMenuItem = async (req, res)=>{
+const deleteMenuItem = async (req, res)=>{
     const db = await findData();
     const id = parseInt(req.params.id);
     const i = db.MenuItem.length; 
@@ -163,3 +163,14 @@ function suppliesValidator(supplies, db){
     });
     return {invalidSupplies, validSupplies}
 }
+
+const MenuItemController = {
+    findMenuItems,
+    findMenuItemById,
+    saveMenuItem,
+    updateMenuItem,
+    updateStockItem,
+    deleteMenuItem
+}
+
+export default MenuItemController;

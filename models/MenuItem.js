@@ -65,4 +65,4 @@ class MenuItem{
     }
 }
 
-module.exports = MenuItem;
+export default MenuItem;

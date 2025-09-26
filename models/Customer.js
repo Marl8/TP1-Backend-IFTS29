@@ -41,4 +41,4 @@
     }
 }
 
-module.exports = Customer;
+export default Customer;
