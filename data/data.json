@@ -5,21 +5,21 @@
       "name": "milanesa",
       "price": 4500,
       "category": "minuta",
-      "stock": 31
+      "stock": 14
     },
     {
       "id": 2,
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": null
+      "stock": 39
     },
     {
       "id": 3,
       "name": "ensalada mixta",
       "price": 3000,
       "category": "minuta",
-      "stock": 49
+      "stock": 34
     },
     {
       "id": 4,
@@ -78,8 +78,8 @@
       "id": 2,
       "name": "Carne",
       "category": "Comestible",
-      "unitPrice": 5000,
-      "stock": 25
+      "unitPrice": 7000,
+      "stock": 30
     },
     {
       "id": 3,
@@ -136,131 +136,60 @@
       "category": "Comestible",
       "unitPrice": 1000,
       "stock": 12
+    },
+    {
+      "id": 20,
+      "name": "Sal 1kg",
+      "category": "Alimentos",
+      "unitPrice": 1200,
+      "stock": 50
     }
   ],
   "customer": [
     {
-      "id": 2,
-      "name": "gabriela",
-      "phone": "123456789",
-      "address": "Tierra del Fuego"
+      "id": 1,
+      "name": "Juan Perez",
+      "phone": "12345678",
+      "address": "Av. Siempre Viva 742"
     },
     {
-      "id": 3,
-      "name": "Anibal Sosa",
-      "phone": "221569876",
-      "address": "Santa Fe 1236"
+      "id": 2,
+      "name": "Gabriela Lopez",
+      "phone": "87654321",
+      "address": "Calle Falsa 123"
     }
   ],
   "deliveryOrder": [
-    {},
     {
-      "id": 1758088258886,
-      "customerId": 100,
+      "id": 1758374348997,
+      "customerId": 1,
       "items": [
         {
           "id": 1,
-          "name": "milanesa",
+          "name": "Milanesa",
           "price": 4500,
           "quantity": 2
         },
         {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000,
+          "id": 3,
+          "name": "Pizza",
+          "price": 6500,
           "quantity": 1
         }
       ],
       "status": "preparing",
-      "total": 13000
-    },
-    {
-      "id": 1758091356530,
-      "customerId": 100,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 13000,
-      "plataforma": "Rappi"
-    },
-    {
-      "id": 1758092433501,
-      "customerId": 100,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 4500,
-      "plataforma": "Ubber Eats"
-    },
-    {
-      "id": 1758092514952,
-      "customerId": 123,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 13000,
+      "total": 15500,
       "plataforma": "Propia"
     },
     {
-      "id": "1758090933568",
-      "customerId": "100",
-      "items": [
-        {
-          "id": "1",
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": "2",
-          "name": "hamburguesa",
-          "price": 4000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 13000,
-      "plataforma": "Rappi"
-    },
-    {
-      "id": 1758096970472,
-      "customerId": 101,
+      "id": 1758374895008,
+      "customerId": 2,
       "items": [
         {
           "id": 1,
           "name": "milanesa",
           "price": 4500,
-          "quantity": 2
+          "quantity": 1
         },
         {
           "id": 2,
@@ -270,13 +199,70 @@
         }
       ],
       "status": "preparing",
-      "total": 13000,
+      "total": 8500,
       "plataforma": "Propia"
     },
     {
-      "id": 1758097037273,
-      "customerId": 100,
+      "id": 1758374926799,
+      "customerId": 2,
       "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 4
+        }
+      ],
+      "status": "preparing",
+      "total": 16500,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 10001,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 1,
+          "name": "Milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "preparing",
+      "total": 9000,
+      "plataforma": "Rappi"
+    },
+    {
+      "id": 1758377575686,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "status": "preparing",
+      "total": 4000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758396533665,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        },
         {
           "id": 3,
           "name": "ensalada mixta",
@@ -285,77 +271,198 @@
         }
       ],
       "status": "preparing",
-      "total": 3000,
-      "plataforma": "PedidosYa"
+      "total": 12000,
+      "plataforma": "Propia"
     },
     {
-      "id": "1758090933569",
-      "customerId": "101",
+      "id": 1758396851940,
+      "customerId": 1,
       "items": [
         {
-          "id": "3",
-          "name": "pizza",
-          "price": 6000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 6000,
-      "plataforma": "PedidosYa"
-    },
-    {
-      "id": 1758329885442,
-      "customerId": "1",
-      "items": [
-        {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000
-        }
-      ],
-      "status": "preparing",
-      "total": null,
-      "plataforma": "Rappi"
-    }
-  ],
-  "externalOrders": [
-    {
-      "id": "1758090933568",
-      "customerId": "100",
-      "items": [
-        {
-          "id": "1",
+          "id": 1,
           "name": "milanesa",
           "price": 4500,
           "quantity": 2
         },
         {
-          "id": "2",
-          "name": "hamburguesa",
-          "price": 4000,
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
           "quantity": 1
         }
       ],
-      "total": 13000,
+      "status": "preparing",
+      "total": 12000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758397006040,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 3
+        }
+      ],
+      "status": "preparing",
+      "total": 9000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758398135441,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 3
+        }
+      ],
+      "status": "preparing",
+      "total": 9000,
+      "plataforma": "Propia"
+    },
+    {
+      "id": 1758399337176,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "preparing",
+      "total": 9000,
+      "plataforma": "Uber Eats"
+    }
+  ],
+  "externalOrders": [
+    {
+      "id": 10001,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 1,
+          "name": "Milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "total": 9000,
       "plataforma": "Rappi",
       "status": "preparing",
       "date_received": "2025-09-20T15:00:00"
     },
     {
-      "id": "1758090933569",
-      "customerId": "101",
+      "id": 10002,
+      "customerId": 2,
       "items": [
         {
-          "id": "3",
-          "name": "pizza",
-          "price": 6000,
+          "id": 2,
+          "name": "Hamburguesa",
+          "price": 4000,
           "quantity": 1
         }
       ],
-      "total": 6000,
+      "total": 4000,
       "plataforma": "PedidosYa",
-      "status": "preparing",
+      "status": "pending",
       "date_received": "2025-09-20T15:10:00"
+    },
+    {
+      "id": 1758386899399,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 1
+        }
+      ],
+      "status": "pending",
+      "total": 4500,
+      "plataforma": "Uber Eats"
+    },
+    {
+      "id": 1758392894955,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 3
+        }
+      ],
+      "status": "pending",
+      "total": 9000,
+      "plataforma": "Uber Eats"
+    },
+    {
+      "id": 1758396977410,
+      "customerId": 1,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "pending",
+      "total": 9000,
+      "plataforma": "Rappi"
+    },
+    {
+      "id": 1758398195100,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "pending",
+      "total": 9000,
+      "plataforma": "Rappi"
+    },
+    {
+      "id": 1758398663174,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "pending",
+      "total": 9000,
+      "plataforma": "Uber Eats"
+    },
+    {
+      "id": 1758399334771,
+      "customerId": 2,
+      "items": [
+        {
+          "id": 1,
+          "name": "milanesa",
+          "price": 4500,
+          "quantity": 2
+        }
+      ],
+      "status": "pending",
+      "total": 9000,
+      "plataforma": "Uber Eats"
     }
   ]
 }

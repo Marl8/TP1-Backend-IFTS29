@@ -1,21 +1,29 @@
 import express from 'express';
 const router = express.Router();
-import DeliveryOrderController from '../controllers/DeliveryOrderController.js';
+const DeliveryOrderController = require('../controllers/DeliveryOrderController');
 
-// Crear un nuevo pedido
-router.post('/', DeliveryOrderController.crearPedido);
+// PEDIDOS PROPIOS/MANUALES
+router.post('/create', DeliveryOrderController.crearPedido);
 
-// Listar todos los pedidos
+// PEDIDOS EXTERNOS (Rappi, Uber Eats, PedidosYa)
+router.post('/create-external', DeliveryOrderController.crearPedidoExterno);
+
+// LISTAR PEDIDOS CONFIRMADOS / PROPIOS
 router.get('/', DeliveryOrderController.listarPedidos);
 
-// Filtrar pedidos por plataforma
-router.get('/filter', DeliveryOrderController.listarPedidosPorPlataforma);
+// LISTAR PEDIDOS EXTERNOS PENDING
+router.get('/external-pending', DeliveryOrderController.listarPedidosExternos);
 
-// Listar pedidos externos pendientes
-router.get('/external/pending', DeliveryOrderController.listarPedidosExternos);
+// CONFIRMAR PEDIDO EXTERNO Y PASAR A PREPARING
+router.patch('/confirm-external/:id', DeliveryOrderController.confirmarPedidoExterno);
 
-// Confirmar pedido externo (pasar a pedidos activos)
-//router.post('/external/confirm/:id', DeliveryOrderController.confirmarPedidoExterno);
-router.patch('/external/confirm/:id', DeliveryOrderController.confirmarPedidoExterno);
+// DESPACHAR PEDIDO (CAMBIAR ESTADO A "dispatched")
+router.post('/dispatch/:id', DeliveryOrderController.despacharPedido);
+// GET con query param
+router.get('/filter', DeliveryOrderController.filtrarPorPlataforma);
 
-export default router;
+// POST con body
+router.post('/filter', DeliveryOrderController.filtrarPorPlataforma);
+
+module.exports = router;
+
