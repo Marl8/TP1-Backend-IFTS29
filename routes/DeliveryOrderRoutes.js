@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-const DeliveryOrderController = require('../controllers/DeliveryOrderController');
+import DeliveryOrderController from '../controllers/DeliveryOrderController.js';
 
 // PEDIDOS PROPIOS/MANUALES
 router.post('/create', DeliveryOrderController.crearPedido);
@@ -25,5 +25,5 @@ router.get('/filter', DeliveryOrderController.filtrarPorPlataforma);
 // POST con body
 router.post('/filter', DeliveryOrderController.filtrarPorPlataforma);
 
-module.exports = router;
+export default router;
 

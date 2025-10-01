@@ -1,5 +1,5 @@
-const DeliveryOrder = require('../models/DeliveryOrder');
-const { findData, writeData } = require('../data/db');
+import DeliveryOrder from '../models/DeliveryOrder.js';
+import { findData, writeData } from'../data/db.js';
 
 // Plataformas externas válidas
 const EXTERNAL_PLATFORMS = ["Rappi", "PedidosYa", "Uber Eats"];
@@ -204,10 +204,7 @@ async function filtrarPorPlataforma(req, res) {
     res.status(200).json(pedidos);
 }
 
-
-
-
-module.exports = {
+const DeliveryOrderController = {
     crearPedido,
     crearPedidoExterno,
     listarPedidos,
@@ -217,5 +214,6 @@ module.exports = {
     filtrarPorPlataforma
 };
 
+export default DeliveryOrderController;
 
 
