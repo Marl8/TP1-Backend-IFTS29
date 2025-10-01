@@ -100,7 +100,7 @@ const showCustomerToEdit = async (req, res) => {
 
     if (!isNaN(id)) {
         try {
-            customer = await exports.findCustomerById(id);
+            customer = await findCustomerById(id);
         } catch (err) {
             error = err.message;
         }
@@ -116,7 +116,7 @@ const showCustomerToDelete = async (req, res) => {
 
     if (!isNaN(id)) {
         try {
-            customer = await exports.findCustomerById(id);
+            customer = await findCustomerById(id);
         } catch (err) {
             error = err.message;
         }
@@ -152,7 +152,7 @@ const updateCustomer = (id, {name, phone, address})=>{
 // Actualiza para API
 const updateCustomerAPI = async (req, res) => {
     const id = parseInt(req.params.id || req.body.id);
-    const result = await exports.updateCustomer(id, req.body);
+    const result = await updateCustomer(id, req.body);
 
     if (result.error) {
         return res.status(400).json({ message: result.error });
@@ -164,7 +164,7 @@ const updateCustomerAPI = async (req, res) => {
 //Actualiza para WEB
 const updateCustomerWeb = async (req, res) => {
     const id = parseInt(req.params.id || req.body.id);
-    const result = await exports.updateCustomer(id, req.body);
+    const result = await updateCustomer(id, req.body);
 
     if (result.error) {
         return res.render('editCustomer', { 
