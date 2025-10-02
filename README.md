@@ -1,6 +1,6 @@
 ## Proyecto Restaurante Sabor Urbano
 
-Proyecto realizado en el marco de la cursada de la materia Backend del 2º cuatrmiestre del sgundo año de la carrera 
+Proyecto realizado en el marco de la cursada de la materia Backend del 2º cuatrmiestre del segundo año de la carrera 
 Tecnicatura en Desarollo de Software impartida por el IFTS Nº29.
 
 ### Requerimientos y análisis.
