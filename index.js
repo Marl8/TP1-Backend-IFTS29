@@ -1,12 +1,16 @@
 import express from 'express';
-const app = express();
-const PORT = 3000;
+import dotenv from "dotenv";
 import methodOverride from 'method-override';
 import CustomerRoutes from './routes/CustomerRoutes.js';
 import WebCustomerRoutes from './routes/WebCustomerRoutes.js';
 import SupplyRoutes from './routes/SupplyRoutes.js';
 import DeliveryOrderRoutes from './routes/DeliveryOrderRoutes.js';
 import MenuItemRoutes from './routes/MenuItemRoutes.js';
+import { connectDB } from './data/MongoConnection.js';
+
+dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -25,5 +29,6 @@ app.use('/api/supply', SupplyRoutes);
 app.use('/', WebCustomerRoutes);
 
 app.listen(PORT, ()=>{
+    connectDB();
     console.log(`servidor OK en el puerto ${PORT}`);
 });
