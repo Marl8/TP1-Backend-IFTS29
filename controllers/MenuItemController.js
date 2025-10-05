@@ -1,176 +1,102 @@
-import {findData, writeData} from '../data/db.js';
-import MenuItem from'../models/MenuItem.js';
+import MenuItemService from'../services/MenuItemService.js';
 
 
 // Buscar MenuItems
 
-const findMenuItems = async(req, res) => {
-    const db = await findData();
-    if(db.MenuItem.length !== 0){
-        res.status(200).json(db.MenuItem);
-    }else{
-        res.status(400).json({message: 'No existen item'});
-    }
+const findMenuItemsAPI = async(req, res) => {
+    try {
+        const menuItems = await MenuItemService.findMenuItems();
+        if(menuItems.length !== 0){
+            res.status(200).json(menuItems);
+        }else{
+            res.status(400).json({message: 'No existen item'});
+        }
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }    
 }
 
 
 // Buscar MenuItem por id
 
-const findMenuItemById = async(req, res) => {
-    const db = await findData();
-    const id = parseInt(req.params.id);
-    const item = db.MenuItem.find(i => i.id === id);
-
-    if(!item){
-        res.status(400).json({message: 'Item no encontrado'});
+const findMenuItemByIdAPI = async(req, res) => {
+    try {
+        const id = req.params.id;
+        const item = await MenuItemService.findMenuItemById(id);
+        res.status(200).json(item);
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
-    res.status(200).json(item);
+    
 }
 
 
 // Guardar un MenuItem
 
-const saveMenuItem = async(req, res)=>{
-    const db = await findData();
-    const {id, name, price, category, stock, listSupplies} = req.body;
-
-    if (!id || !name || !price || !category || !stock || !listSupplies || !Array.isArray(listSupplies)) {
-            return res.status(400).json({ 
-                message: 'Datos incompletos. Se requieren: id, name, price, category, stock, listSupplies' 
-        });
-    }
-    const found = db.MenuItem.filter(i => i.id === id);
-
-    if(found.length !== 0){
-        return res.status(400).json({ message: 'Ya existe un item con este id' });
-    }
-
-    const {invalidSupplies, validSupplies} = suppliesValidator(listSupplies, db);
-    if (invalidSupplies.length > 0) {
-        return res.status(400).json({ error: 'Algunos suministros no existen en la base de datos.', invalidSupplies });
-    }
-
-    const item = new MenuItem(id, name, price, category, stock);
-    item.setSupplies(validSupplies);
-    const itemDto = {
-        id: item.getId(),
-        name: item.getName(),
-        price: item.getPrice(),
-        category: item.getCategory(),
-        stock: item.getStock(),
-        listSupplies: item.getSupplies()
-    }
-    db.MenuItem.push(itemDto);
-    writeData(db);
-    res.status(201).json({message: 'Item guardado con éxito'});
+const saveMenuItemAPI = async(req, res)=>{
+    try {
+        const saveMenuItem = await MenuItemService.saveMenuItem(req.body);
+        res.status(201).json({message: 'Item guardado con éxito', saveMenuItem});
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }    
 };
 
 
 // Actualizar MenuItem
 
-const updateMenuItem = async (req, res)=>{
-    const db = await findData();
-    const id = parseInt(req.params.id);
-
-    const {name, price, category, stock, listSupplies} = req.body;
-    if (!id || !name || !price || !category || !stock || !listSupplies || !Array.isArray(listSupplies)) {
-            return res.status(400).json({ 
-                message: 'Datos incompletos. Se requieren: id, name, price, category, stock, listSupplies' 
-        });
-    }
-    const index = db.MenuItem.findIndex(c => c.id === id);
-
-    if(index === -1){
-        return res.status(400).send('Item no encontrado');
-    }  
-
-    const {invalidSupplies, validSupplies} = suppliesValidator(listSupplies, db);
-    if (invalidSupplies.length > 0) {
-        return res.status(400).json({ error: 'Algunos suministros no existen en la base de datos.', invalidSupplies });
-    }
-
-    db.MenuItem[index] = { 
-        id, 
-        name: name,
-        price: price,
-        category: category,
-        stock: stock, 
-        listSupplies: validSupplies
-        };          
-    writeData(db);
-    res.json({menuItem: db.MenuItem[index], message: 'Item modificado con éxito'});
+const updateMenuItemAPI = async (req, res)=>{
+    try {
+        const id = req.params.id;
+    const result= await MenuItemService.updateMenuItem(id, req.body);
+    if (result.error) {
+            return res.status(400).json({ message: result.error });
+        }
+        res.status(200).json({ menuItem: result.menuItem, message: result.message });
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }        
 };
 
 
 // Actualizar stock del MenuItem
 
-const updateStockItem = async (req, res) => {
-    const db = await findData();
-    const id = parseInt(req.params.id);
-    const itemData = db.MenuItem.find(item => item.id === id);
-    
-    if (!itemData) {
-        return res.status(400).send('Item no encontrado');
+const updateStockItemAPI = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const {stock} = req.body;
+        const result = await MenuItemService.updateStockItem(id, stock);
+        res.status(200).json({ menuItem: result.menuItem, message: result.message });
+    } catch (error) {
+        res.status(400).json({message: error.message});
     }
     
-    if (itemData.listSupplies.length > 0) {
-        itemData.listSupplies.forEach(supply => {
-            supply.stock = supply.stock - 1;
-        });
-    }
-    itemData.stock = itemData.stock - 1;
-    writeData(db);
-    
-    res.json({
-        item: itemData, 
-        message: 'Stock de supplies actualizado con éxito'
-    });
 };
 
 // Eliminar un MenuItem
 
-const deleteMenuItem = async (req, res)=>{
-    const db = await findData();
-    const id = parseInt(req.params.id);
-    const i = db.MenuItem.length; 
-    db.MenuItem = db.MenuItem.filter(u => u.id !== id);
+const deleteMenuItemAPI = async (req, res)=>{
+    try {
+        const id = req.params.id;
+    const result = await MenuItemService.deleteMenuItem(id);
 
-    if (db.MenuItem.length === i){
-        return res.status(400).send('Item no encontrado');
-    } 
-    writeData(db);
-    res.status(200).json({message: 'Item Borrado con éxito'}); 
+    if (!result){
+        return res.status(400).json({error: 'MenuItem no encontrado'});
+    }
+    res.status(200).json( {message: 'Borrado con éxito'});
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
 };
 
 
-function suppliesValidator(supplies, db){
-    const validSupplies = [];
-    const invalidSupplies = [];
-
-    supplies.forEach(supplyId => {
-        const supply = db.supply.find(supply => supply.id === supplyId);
-        if (supply) {
-            validSupplies.push({
-                id: supply.id,
-                name: supply.name,
-                category: supply.category,
-                unitPrice: supply.unitPrice,
-                stock: supply.stock
-            });
-        } else {
-            invalidSupplies.push(supplyId);
-        }
-    });
-    return {invalidSupplies, validSupplies}
-}
-
 const MenuItemController = {
-    findMenuItems,
-    findMenuItemById,
-    saveMenuItem,
-    updateMenuItem,
-    updateStockItem,
-    deleteMenuItem
+    findMenuItemsAPI,
+    findMenuItemByIdAPI,
+    saveMenuItemAPI,
+    updateMenuItemAPI,
+    updateStockItemAPI,
+    deleteMenuItemAPI,
 }
 
 export default MenuItemController;

@@ -1,48 +1,19 @@
-import Customer from '../models/Customer.js';
-import {findData, writeData} from '../data/db.js';
+import CustomerService from '../services/CustomerService.js';
 
-// Guargar un nuevo cliente
-async function saveCustomerData({id, name, phone, address}) {
-    const db = findData();
-    const numericId = parseInt(id);
-
-    if (!numericId || !name || !phone || !address) {
-        throw new Error('Datos incompletos. Se requieren: id, name, phone, address');
-    }
-
-    const found = db.customer.filter(u => u.id === numericId);
-    if (found.length !== 0) {
-        throw new Error('Ya existe un Cliente con este id');
-    }
-
-    const customer = new Customer(numericId, name, phone, address);
-    const customerDto = {
-        id: customer.getId(),
-        name: customer.getName(),
-        phone: customer.getPhone(),
-        address: customer.getAddress()
-    };
-
-    db.customer.push(customerDto);
-    writeData(db);
-    
-        return customerDto;
-};
-
-// -------------------- SAVE API ---------------------------
+// SAVE API 
 const saveCustomerAPI = async (req, res) => {
     try {
-        const customer = await saveCustomerData(req.body);
+        const customer = await CustomerService.saveCustomerData(req.body);
         res.status(201).json({ message: 'Cliente guardado con éxito', customer });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 }; 
 
-// -------------------- SAVE web ---------------------------
+// SAVE web 
 const saveCustomerWeb = async (req, res) => {
     try {
-        await saveCustomerData(req.body);
+        await CustomerService.saveCustomerData(req.body);
         res.redirect('/customers?success=1');
     } catch (err) {
         res.render('addCustomer', {
@@ -53,172 +24,152 @@ const saveCustomerWeb = async (req, res) => {
     }
 };
 
-// Listar Clientes
-const listCustomers = async (req, res) =>{
-    const db = findData();
-    const customers = db.customer;
-    res.render('listCustomers', {
-    title: 'Listado de Clientes',
-    customers
-    })
+// Listar todos los clientes API 
+
+const listCustomersAPI = async (req, res)=>{
+    try {
+        const customers = await CustomerService.listCustomers();
+        if(customers.length !== 0){
+            res.status(200).json(customers);
+        }else{
+            res.status(400).json({message: 'No existen item'});
+        }
+    } catch (error) {
+        res.status(400).json({message: err.message});
+    }
 }
 
-// Buscar por ID, devuelvo customer
-const findCustomerById = (id) => {
-    const db = findData();
-    const customer = db.customer.find(c => c.id === id);
-    if (!customer) throw new Error ('Cliente no encontrado');
 
-    return customer;
+// Listar todos los clientes Web 
+const listCustomersWeb = async (req, res)=>{
+    try {
+        const customers = await CustomerService.listCustomers();
+        res.render('listCustomers', {
+        title: 'Listado de Clientes',
+        customers
+        })
+    } catch (error) {
+        throw new Error(error.message);
+    }
 }
 
-// ---------Res Buscar para API -----------
-const findCustomerByIdAPI = (req, res) => {
+
+// Buscar por id para API 
+const findCustomerByIdAPI = async (req, res) => {
     try{
-        const id = parseInt(req.params.id);
-        const customer = findCustomerById(id);
+        const id = req.params.id;
+        const customer = await CustomerService.findCustomerById(id);
         res.status(200).json(customer);
     } catch (err) {
         res.status(400).json({message: err.message});
     }
 }
 
-// ---------- Res Buscar para Web --------
+/*/ Buscar por id para Web
 const findCustomerByIdWeb = async (id) => {
-    const db = findData();
-    const customer = db.customer.find(c => c.id === id);
-    if (!customer) {
-        throw new Error('Cliente no encontrado');
-    }
-    return customer;
-};
+    try {
+        const customer = await CustomerService.findCustomerById(id);
+        return customer;
+    } catch (error) {
+        throw new Error(error.message);
+    }   
+};*/
 
 const showCustomerToEdit = async (req, res) => {
-    const id = parseInt(req.query.id);
+    const id = req.query.id;
     let customer = null;
     let error = null;
-
-    if (!isNaN(id)) {
-        try {
-            customer = await findCustomerById(id);
-        } catch (err) {
-            error = err.message;
+    try {
+        customer = await CustomerService.findCustomerById(id);
+    } catch (err) {
+        error = err.message;
         }
-    }
-
     res.render('updateCustomer', { id, customer, error });
 };
 
 const showCustomerToDelete = async (req, res) => {
-    const id = parseInt(req.query.id);
+    const id = req.query.id;
     let customer = null;
     let error = null;
-
-    if (!isNaN(id)) {
-        try {
-            customer = await findCustomerById(id);
-        } catch (err) {
-            error = err.message;
-        }
+    try {
+        customer = await CustomerService.findCustomerById(id);
+    } catch (err) {
+        error = err.message;
     }
-
     res.render('deleteCustomer', { id, customer, error });
-};
-
-
-// Actualizar cliente
-
-const updateCustomer = (id, {name, phone, address})=>{
-    const db = findData();
-    const index = db.customer.findIndex(c => c.id === id);
-    if (!name || !phone|| !address) {
-            return {error: 'Datos incompletos. Se requieren: id, name, phone, address' 
-        };
-    }
-    if(index === -1){
-        return {error: 'Usuario no encontrado'};
-    }
-    db.customer[index] = { 
-        id, 
-        name: name,
-        phone: phone,
-        address: address 
-        };          
-    writeData(db);
-    return {cliente: db.customer[index], message: 'Cliente modificado con éxito'};
 };
 
 
 // Actualiza para API
 const updateCustomerAPI = async (req, res) => {
-    const id = parseInt(req.params.id || req.body.id);
-    const result = await updateCustomer(id, req.body);
+    try {
+        const id = req.params.id;
+        const result = await CustomerService.updateCustomer(id, req.body);
 
-    if (result.error) {
-        return res.status(400).json({ message: result.error });
-    }
-
-    res.status(200).json({ cliente: result.cliente, message: result.message });
+        if (result.error) {
+            return res.status(400).json({ message: result.error });
+        }
+        res.status(200).json({ cliente: result.cliente, message: result.message });
+    } catch (error) {
+        res.status(400).json({message: err.message});
+    }    
 };
 
 //Actualiza para WEB
 const updateCustomerWeb = async (req, res) => {
-    const id = parseInt(req.params.id || req.body.id);
-    const result = await updateCustomer(id, req.body);
+    try {
+        const id = req.body.id;
+        const result = await CustomerService.updateCustomer(id, req.body);
 
-    if (result.error) {
-        return res.render('editCustomer', { 
-            title: 'Editar Cliente', 
-            error: result.error,
-            customer: { ...req.body, id }
-        });
-    }
-    res.redirect(`/customers?success=${encodeURIComponent(result.message)}`);
+        if (result.error) {
+            return res.render('editCustomer', { 
+                title: 'Editar Cliente', 
+                error: result.error,
+                customer: { ...req.body, id }
+            });
+        }
+        res.redirect(`/customers?success=${encodeURIComponent(result.message)}`);
+    } catch (error) {
+        throw new Error(error.message);
+    }    
 };
 
-// Eliminar cliente. 
 
-async function deleteCustomer (id) {
-    const db = findData();
-    const i = db.customer.length; 
-    db.customer = db.customer.filter(u => u.id !== id);
-
-    if (db.customer.length === i){
-        return null;
-    } 
-    writeData(db);
-    return true;
-}
-
+// Delete para API
 const deleteCustomerAPI = async (req, res) => {
-    const id = parseInt(req.params.id);
-    const result = await deleteCustomer(id);
+    try {
+        const id = req.params.id;
+    const result = await CustomerService.deleteCustomer(id);
 
     if (!result){
         return res.status(400).json({error: 'Usuario no encontrado'});
     }
-
     res.status(200).json( {message: 'Borrado con éxito'});
+    } catch (error) {
+        throw new Error(error.message);
+    }
 }
 
+// Delete para Web
 const deleteCustomerWeb = async (req, res) => {
-    const id = parseInt(req.params.id);
-    const result = await deleteCustomer(id);
-
-    if (!result) {
-        return res.status(400).send('Usuario no encontrado');
+    try {
+        const id = req.params.id;
+        const result = await CustomerService.deleteCustomer(id);
+        if (!result) {
+            return res.status(400).send('Usuario no encontrado');
+        }
+        res.redirect('/customers/list'); // vuelve al listado
+    } catch (error) {
+        throw new Error(error.message);
     }
-
-    res.redirect('/customers/list'); // vuelve al listado
 };
-
 
 const CustomerController = {
     saveCustomerAPI, 
     saveCustomerWeb,
-    listCustomers,
+    listCustomersAPI,
+    listCustomersWeb,
     findCustomerByIdAPI,
-    findCustomerByIdWeb,
     showCustomerToEdit,
     showCustomerToDelete,
     updateCustomerAPI,

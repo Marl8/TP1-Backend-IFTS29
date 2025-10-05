@@ -1,44 +1,18 @@
-    class Customer {
-        
-    #id;
-    #name;
-    #phone;
-    #address;
+import mongoose from "mongoose";
 
-    constructor(id, name, phone, address) {
-        this.#id = id;
-        this.#name = name;
-        this.#phone = phone;
-        this.#address = address;
-    }
+const customerSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    dni: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: { type: String, required: true },
+});
+    
+customerSchema.virtual('listOrders', {
+    ref: 'DeliveryOrder',
+    localField: '_id',
+    foreignField: 'customerId',
+});
 
-    getId() { 
-        return this.#id; 
-    }
-
-    getName() { 
-        return this.#name; 
-    }
-
-    setName(name) { 
-        this.#name = name; 
-    }
-
-    getPhone() { 
-        return this.#phone; 
-    }
-
-    setPhone(phone) { 
-        this.#phone = phone; 
-    }
-
-    getAddress() { 
-        return this.#address; 
-    }
-
-    setAddress(address) { 
-        this.#address = address; 
-    }
-}
+const Customer = mongoose.model('Customer', customerSchema);
 
 export default Customer;

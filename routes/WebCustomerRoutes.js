@@ -12,7 +12,7 @@ router.get('/customers', (req, res) => {
     res.render('customers', { title: 'Clientes', customers: db.customer, query: req.query });
 });
 router.get('/customers/add', (req, res) => res.render('addCustomer', {title: 'Agregar Cliente'}));
-router.get('/customers/list', CustomerController.listCustomers);
+router.get('/customers/list', CustomerController.listCustomersWeb);
 router.get('/customers/update', CustomerController.showCustomerToEdit);
 router.get('/customers/delete', CustomerController.showCustomerToDelete);
 

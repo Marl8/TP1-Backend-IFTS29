@@ -1,92 +1,32 @@
-class DeliveryOrder {
-    #id;
-    #customerId;
-    #items;
-    #status;
-    #total;
-    //#assignedRiderId;
-    #estimatedTime;
-    #plataforma;  
+import mongoose from "mongoose";
 
-    constructor(id, customerId, total, status = 'preparing', plataforma = 'Propia') {
-        this.#id = id;
-        this.#customerId = customerId;
-        this.#status = status;
-        this.#total = total;
-        this.#items = [];
-        this.#plataforma = plataforma;  // Valor por defecto 'Propia'
-    }
+const deliveryOrderSchema = new mongoose.Schema({
+    customerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Customer',
+        required: true,
+    },
+    items: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MenuItem',
+        required: true,
+    }],
+    status: {
+        type: String,
+        enum: ['preparing', 'pending', 'dispatched'], 
+        default: 'preparing',
+        required: true
+    },
+    total: {type: Number, required: true},
+    assignedRiderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Rider',
+    },
+    estimatedTime: {type: Date, required: false },
+    plataforma: {type: String, default: 'Propia'},
+});
 
-    getId() { 
-        return this.#id; 
-    }
-
-    getCustomerId() { 
-        return this.#customerId;
-    }
-
-    setCustomerId(customerId) { 
-        this.#customerId = customerId;
-    }
-
-    getStatus() { 
-        return this.#status; 
-    }
-
-    setStatus(status) { 
-        this.#status = status; 
-    }
-
-    getTotal() { 
-        return this.#total; 
-    }
-
-    setTotal(total) { 
-        this.#total = total; 
-    }
-
-    getEstimatedTime() { 
-        return this.#estimatedTime; 
-    }
-
-    setEstimatedTime(estimatedTime) { 
-        this.#estimatedTime = estimatedTime; 
-    }
-
-    setItems(items) {
-        this.#items = items;
-    }
-
-    removeItem(index) { 
-        this.#items.splice(index, 1); 
-    }
-    
-    getItems() { 
-        return [...this.#items]; 
-    }
-
-    // Métodos para obtener y setear la plataforma
-    getPlataforma() {
-        return this.#plataforma;
-    }
-
-    setPlataforma(plataforma) {
-        this.#plataforma = plataforma;
-    }
-
-    // Método para convertir el objeto a JSON
-    toJSON() {
-        return {
-            id: this.#id,
-            customerId: this.#customerId,
-            items: this.#items,
-            status: this.#status,
-            total: this.#total,
-            estimatedTime: this.#estimatedTime,
-            plataforma: this.#plataforma  
-        };
-    }
-}
+const DeliveryOrder = mongoose.model('DeliveryOrder', deliveryOrderSchema);
 
 export default DeliveryOrder;
 
