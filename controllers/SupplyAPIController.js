@@ -92,7 +92,7 @@ const deleteSupplyAPI = async (req, res)=>{
     }
 }    
 
-const SupplyController = {
+const SupplyAPIController = {
     saveSupplyAPI,
     findSuppliesAPI,
     findSupplyByIdAPI,
@@ -101,4 +101,4 @@ const SupplyController = {
     deleteSupplyAPI,
 }
 
-export default SupplyController;
+export default SupplyAPIController;

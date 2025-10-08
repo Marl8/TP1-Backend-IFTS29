@@ -6,6 +6,8 @@ import WebCustomerRoutes from './routes/WebCustomerRoutes.js';
 import SupplyRoutes from './routes/SupplyRoutes.js';
 import DeliveryOrderRoutes from './routes/DeliveryOrderRoutes.js';
 import MenuItemRoutes from './routes/MenuItemRoutes.js';
+import RiderRoutes from './routes/RiderRoutes.js';
+import UserRoutes from './routes/UserRoutes.js';
 import { connectDB } from './data/MongoConnection.js';
 
 dotenv.config();
@@ -20,10 +22,13 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+//Rutas API
 app.use('/api/menu', MenuItemRoutes);
 app.use('/api/customer', CustomerRoutes);
 app.use('/api/delivery-orders', DeliveryOrderRoutes);
 app.use('/api/supply', SupplyRoutes);
+app.use('/api/rider', RiderRoutes);
+app.use('/api/user', UserRoutes);
 
 //Rutas Web
 app.use('/', WebCustomerRoutes);

@@ -1,14 +1,5 @@
 import CustomerService from '../services/CustomerService.js';
 
-// SAVE API 
-const saveCustomerAPI = async (req, res) => {
-    try {
-        const customer = await CustomerService.saveCustomerData(req.body);
-        res.status(201).json({ message: 'Cliente guardado con éxito', customer });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}; 
 
 // SAVE web 
 const saveCustomerWeb = async (req, res) => {
@@ -24,21 +15,6 @@ const saveCustomerWeb = async (req, res) => {
     }
 };
 
-// Listar todos los clientes API 
-
-const listCustomersAPI = async (req, res)=>{
-    try {
-        const customers = await CustomerService.listCustomers();
-        if(customers.length !== 0){
-            res.status(200).json(customers);
-        }else{
-            res.status(400).json({message: 'No existen item'});
-        }
-    } catch (error) {
-        res.status(400).json({message: err.message});
-    }
-}
-
 
 // Listar todos los clientes Web 
 const listCustomersWeb = async (req, res)=>{
@@ -53,17 +29,6 @@ const listCustomersWeb = async (req, res)=>{
     }
 }
 
-
-// Buscar por id para API 
-const findCustomerByIdAPI = async (req, res) => {
-    try{
-        const id = req.params.id;
-        const customer = await CustomerService.findCustomerById(id);
-        res.status(200).json(customer);
-    } catch (err) {
-        res.status(400).json({message: err.message});
-    }
-}
 
 /*/ Buscar por id para Web
 const findCustomerByIdWeb = async (id) => {
@@ -100,21 +65,6 @@ const showCustomerToDelete = async (req, res) => {
 };
 
 
-// Actualiza para API
-const updateCustomerAPI = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const result = await CustomerService.updateCustomer(id, req.body);
-
-        if (result.error) {
-            return res.status(400).json({ message: result.error });
-        }
-        res.status(200).json({ cliente: result.cliente, message: result.message });
-    } catch (error) {
-        res.status(400).json({message: err.message});
-    }    
-};
-
 //Actualiza para WEB
 const updateCustomerWeb = async (req, res) => {
     try {
@@ -135,21 +85,6 @@ const updateCustomerWeb = async (req, res) => {
 };
 
 
-// Delete para API
-const deleteCustomerAPI = async (req, res) => {
-    try {
-        const id = req.params.id;
-    const result = await CustomerService.deleteCustomer(id);
-
-    if (!result){
-        return res.status(400).json({error: 'Usuario no encontrado'});
-    }
-    res.status(200).json( {message: 'Borrado con éxito'});
-    } catch (error) {
-        throw new Error(error.message);
-    }
-}
-
 // Delete para Web
 const deleteCustomerWeb = async (req, res) => {
     try {
@@ -164,18 +99,13 @@ const deleteCustomerWeb = async (req, res) => {
     }
 };
 
-const CustomerController = {
-    saveCustomerAPI, 
+const CustomerWebController = {
     saveCustomerWeb,
-    listCustomersAPI,
     listCustomersWeb,
-    findCustomerByIdAPI,
     showCustomerToEdit,
     showCustomerToDelete,
-    updateCustomerAPI,
     updateCustomerWeb,
-    deleteCustomerAPI,
     deleteCustomerWeb
 }
 
-export default CustomerController;
+export default CustomerWebController;

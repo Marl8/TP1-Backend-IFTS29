@@ -90,7 +90,7 @@ const deleteMenuItemAPI = async (req, res)=>{
 };
 
 
-const MenuItemController = {
+const MenuItemAPIController = {
     findMenuItemsAPI,
     findMenuItemByIdAPI,
     saveMenuItemAPI,
@@ -99,4 +99,4 @@ const MenuItemController = {
     deleteMenuItemAPI,
 }
 
-export default MenuItemController;
+export default MenuItemAPIController;

@@ -5,7 +5,7 @@ const RiderSchema = new mongoose.Schema({
     dni: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    status: {
+    state: {
         type: String,
         enum: ['Disponible', 'Ocupado'],
     }

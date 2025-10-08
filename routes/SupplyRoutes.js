@@ -1,14 +1,14 @@
 import express from 'express';
 const router = express.Router();
-import SupplyController from '../controllers/SupplyController.js';
+import SupplyAPIController from '../controllers/SupplyAPIController.js';
 
 
-router.post('/saveSupply', SupplyController.saveSupplyAPI);
-router.get('/findSupplies', SupplyController.findSuppliesAPI);
-router.get('/findSupplyById/:id', SupplyController.findSupplyByIdAPI);
-router.put('/updateSupply/:id', SupplyController.updateSupplyAPI);
-router.patch('/updateStockSupply/:id', SupplyController.updateStockSupplyAPI);
-router.delete('/deleteSupply/:id', SupplyController.deleteSupplyAPI);
+router.post('/saveSupply', SupplyAPIController.saveSupplyAPI);
+router.get('/findSupplies', SupplyAPIController.findSuppliesAPI);
+router.get('/findSupplyById/:id', SupplyAPIController.findSupplyByIdAPI);
+router.put('/updateSupply/:id', SupplyAPIController.updateSupplyAPI);
+router.patch('/updateStockSupply/:id', SupplyAPIController.updateStockSupplyAPI);
+router.delete('/deleteSupply/:id', SupplyAPIController.deleteSupplyAPI);
 
 
 export default router;

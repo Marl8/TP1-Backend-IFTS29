@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import { findData } from '../data/db.js';
-import CustomerController from '../controllers/CustomerController.js';
+import CustomerWebController from '../controllers/CustomerWebController.js';
 
 
 router.get('/', (req, res) => {
@@ -12,14 +12,14 @@ router.get('/customers', (req, res) => {
     res.render('customers', { title: 'Clientes', customers: db.customer, query: req.query });
 });
 router.get('/customers/add', (req, res) => res.render('addCustomer', {title: 'Agregar Cliente'}));
-router.get('/customers/list', CustomerController.listCustomersWeb);
-router.get('/customers/update', CustomerController.showCustomerToEdit);
-router.get('/customers/delete', CustomerController.showCustomerToDelete);
+router.get('/customers/list', CustomerWebController.listCustomersWeb);
+router.get('/customers/update', CustomerWebController.showCustomerToEdit);
+router.get('/customers/delete', CustomerWebController.showCustomerToDelete);
 
-router.post('/customers/save', CustomerController.saveCustomerWeb);
-router.post('/customers/update/:id', CustomerController.updateCustomerWeb);
+router.post('/customers/save', CustomerWebController.saveCustomerWeb);
+router.post('/customers/update/:id', CustomerWebController.updateCustomerWeb);
 
-router.delete('/customers/delete/:id', CustomerController.deleteCustomerWeb);
+router.delete('/customers/delete/:id', CustomerWebController.deleteCustomerWeb);
 
 
 export default router;

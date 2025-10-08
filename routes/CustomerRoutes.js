@@ -1,12 +1,11 @@
 import express from 'express';
 const router = express.Router();
-import CustomerController from '../controllers/CustomerController.js';
+import CustomerAPIController from '../controllers/CustomerAPIController.js';
 
-// Cambió el final de los nombres para distinguirlos de las respuestas de la Web
-router.post('/saveCustomer', CustomerController.saveCustomerAPI); 
-router.get('/findCustomer/getCostumers', CustomerController.listCustomersAPI);
-router.get('/findCustomer/:id', CustomerController.findCustomerByIdAPI);
-router.put('/updateCustomer/:id', CustomerController.updateCustomerAPI);
-router.delete('/deleteCustomer/:id', CustomerController.deleteCustomerAPI);
+router.post('/saveCustomer', CustomerAPIController.saveCustomerAPI); 
+router.get('/findCustomer/getCostumers', CustomerAPIController.listCustomersAPI);
+router.get('/findCustomer/:id', CustomerAPIController.findCustomerByIdAPI);
+router.put('/updateCustomer/:id', CustomerAPIController.updateCustomerAPI);
+router.delete('/deleteCustomer/:id', CustomerAPIController.deleteCustomerAPI);
 
 export default router;
