@@ -3,7 +3,7 @@ import Rider from '../models/Rider.js';
 const saveRider = async ({name, dni, email, phone, state})=>{
     try {
         if(!name || !dni || !email || !phone || !state){
-        throw new Error('Datos incompletos. Se requieren: name, dni, phone, state');
+            throw new Error('Datos incompletos. Se requieren: name, dni, phone, state');
         }
         const found = await Rider.findOne({'dni': dni});
         if(found){
@@ -15,7 +15,7 @@ const saveRider = async ({name, dni, email, phone, state})=>{
     } catch (error) {
         throw new Error(error.message);
     }   
-}
+};
 
 const findAllRiders = async()=>{
     try {
@@ -27,7 +27,7 @@ const findAllRiders = async()=>{
     } catch (error) {
         throw new Error(error.message);
     }  
-}
+};
 
 
 const findRiderById = async(id)=>{
@@ -40,7 +40,7 @@ const findRiderById = async(id)=>{
     } catch (error) {
         throw new Error(error.message);
     }
-}
+};
 
 const updateRider = async(id, {name, dni, email, phone, state})=> {
     try {
