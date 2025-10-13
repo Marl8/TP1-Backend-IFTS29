@@ -17,4 +17,7 @@ automatizar la impresión de comandas, integrar el control de inventario para un
 actualización en tiempo real del menú, y ofrecer un panel de control para seguir el estado de
 cada pedido y el desempeño de los repartidores.
 
+### Diagrama Relacional
+
+<img width="810" height="752" alt="Restaurante Sabrores Urbanos" src="https://github.com/user-attachments/assets/85e49bb2-9a36-4fe3-9a15-0c4f4deee1bc" />
 
