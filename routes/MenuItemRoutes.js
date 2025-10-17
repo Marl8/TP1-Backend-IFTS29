@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const MenuItemController = require('../controllers/MenuItemController.js');
+import MenuItemAPIController from '../controllers/MenuItemAPIController.js';
 
-router.get('/findMenuItems', MenuItemController.findMenuItems);
-router.get('/findMenuItem/:id', MenuItemController.findMenuItemById);
-router.post('/saveMenuItem/', MenuItemController.saveMenuItem);
-router.put('/updateMenuItem/:id', MenuItemController.updateMenuItem);
-router.patch('/updateStockItem/:id', MenuItemController.updateStockItem);
-router.delete('/deleteMenuItem/:id', MenuItemController.deleteMenuItem);
+router.get('/findMenuItems', MenuItemAPIController.findMenuItemsAPI);
+router.get('/findMenuItem/:id', MenuItemAPIController.findMenuItemByIdAPI);
+router.post('/saveMenuItem/', MenuItemAPIController.saveMenuItemAPI);
+router.put('/updateMenuItem/:id', MenuItemAPIController.updateMenuItemAPI);
+router.patch('/updateStockItem/:id', MenuItemAPIController.updateStockItemAPI);
+router.delete('/deleteMenuItem/:id', MenuItemAPIController.deleteMenuItemAPI);
 
-module.exports = router;
+export default router;

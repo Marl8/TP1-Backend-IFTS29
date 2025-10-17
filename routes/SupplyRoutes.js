@@ -1,14 +1,14 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const SupplyController = require('../controllers/SupplyController.js');
+import SupplyAPIController from '../controllers/SupplyAPIController.js';
 
 
-router.post('/saveSupply', SupplyController.saveSupply);
-router.get('/findSupplies', SupplyController.findSupplies);
-router.get('/findSupplyById/:id', SupplyController.findSupplyById);
-router.put('/updateSupply/:id', SupplyController.updateSupply);
-router.patch('/updateStockSupply/:id', SupplyController.updateStockSupply);
-router.delete('/deleteSupply/:id', SupplyController.deleteSupply);
+router.post('/saveSupply', SupplyAPIController.saveSupplyAPI);
+router.get('/findSupplies', SupplyAPIController.findSuppliesAPI);
+router.get('/findSupplyById/:id', SupplyAPIController.findSupplyByIdAPI);
+router.put('/updateSupply/:id', SupplyAPIController.updateSupplyAPI);
+router.patch('/updateStockSupply/:id', SupplyAPIController.updateStockSupplyAPI);
+router.delete('/deleteSupply/:id', SupplyAPIController.deleteSupplyAPI);
 
 
-module.exports = router;
+export default router;
