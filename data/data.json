@@ -58,7 +58,7 @@
       "name": "Harina",
       "category": "Comestible",
       "unitPrice": 750,
-      "stock": 30
+      "stock": 25
     },
     {
       "id": 2,
@@ -132,10 +132,10 @@
       "address": "Tierra del Fuego"
     },
     {
-      "id": 3,
-      "name": "Anibal Sosa",
-      "phone": "221569876",
-      "address": "Santa Fe 1236"
+      "id": 1,
+      "name": "Juan Sosa",
+      "phone": "12345678",
+      "address": "San Martin 558"
     }
   ],
   "deliveryOrder": [
