@@ -21,7 +21,18 @@ const saveUser = async({name, dni, email, username, password, rol})=>{
             rol: rol,
         });
         const savedUser = await user.save();
-        return savedUser;
+        if(savedUser){
+            const userDto = {
+                name: savedUser.name,
+                dni: savedUser.dni,
+                email: savedUser.email,
+                username: savedUser.username,
+                rol: savedUser.rol,
+            }
+            return userDto;
+        }else{
+            throw new Error('Ocurrió un error en el guardado');
+        }        
     } catch (error) {
         throw new Error(error.message);
     }
@@ -33,7 +44,18 @@ const findAllUsers = async()=>{
         if(users.length === 0) {
             throw new Error('No hay usuarios registrados en el sistema');
         }
-        return users;
+        const listUsers = users.map(us => {
+            const userDto = {
+                id: us.id,
+                name: us.name,
+                dni: us.dni,
+                email: us.email,
+                username: us.username,
+                rol: us.rol,
+            }
+            return userDto;
+        })
+        return listUsers;
     } catch (error) {
         throw new Error(error.message);
     }
@@ -41,11 +63,19 @@ const findAllUsers = async()=>{
 
 const findUserById = async(id)=>{
     try {
-        const user = User.findById(id);
+        const user = await User.findById(id);
         if(!user){
             throw new Error('Usuario no encontrado');
         }
-        return user;
+        const userDto = {
+            id: user.id,
+            name: user.name,
+            dni: user.dni,
+            email: user.email,
+            username: user.username,
+            rol: user.rol,
+            }
+        return userDto;
     } catch (error) {
         throw new Error(error.message);
     }
@@ -66,7 +96,7 @@ const updateUser = async(id, {name, dni, email, username, password, rol})=>{
         if(!updatedUser){
             return {error: 'Usuario no encontrado'};
         }
-        return {user: updatedUser, message: 'User modificado con éxito'};
+        return {message: 'User modificado con éxito'};
     } catch (error) {
         throw new Error(error.message);
     }
