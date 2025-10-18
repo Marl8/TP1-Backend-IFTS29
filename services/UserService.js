@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt'; 
 import User from '../models/User.js';
 
 const saveUser = async({name, dni, email, username, password, rol})=>{
@@ -9,12 +10,14 @@ const saveUser = async({name, dni, email, username, password, rol})=>{
         if(found){
             throw new Error('El usuario ya existe');
         }
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = new User({
             name: name,
             dni: dni,
             email: email,
             username: username,
-            password: password,
+            password: hashedPassword,
             rol: rol,
         });
         const savedUser = await user.save();
