@@ -68,12 +68,27 @@ const deleteUserAPI = async (req, res) => {
     }
 };
 
+
+// Login API
+
+const loginAPI = async (req, res)=>{
+    try {       
+        const result = await UserService.loginUser(req.body);
+        if(result.islogin) {
+            res.status(200).json( {message: 'Login exitoso', user: result.user});
+        }
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
+}; 
+
 const UserAPIController = {
     saveUserAPI,
     findUsersAPI,
     findUserByIdAPI,
     updateUserAPI,
     deleteUserAPI,
+    loginAPI,
 };
 
 export default UserAPIController;

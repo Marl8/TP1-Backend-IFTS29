@@ -7,5 +7,6 @@ router.get('/findUser/:id', UserAPIController.findUserByIdAPI);
 router.post('/saveUser/', UserAPIController.saveUserAPI);
 router.put('/updateUser/:id', UserAPIController.updateUserAPI);
 router.delete('/deleteUser/:id', UserAPIController.deleteUserAPI);
+router.post('/login', UserAPIController.loginAPI);
 
 export default router;

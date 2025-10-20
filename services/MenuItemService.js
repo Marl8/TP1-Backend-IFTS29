@@ -41,7 +41,8 @@ const saveMenuItem = async({name, price, category, stock, supplies})=>{
                 { $addToSet: { menuItems: saveItem._id } }
             );
         }
-        await saveItem.populate('supplies'); // sincronizar la lista de supplies
+        // Reemplazamos los IDs de los supplies en el MenuItem por los documentos completos para poder actualizar los stocks.
+        await saveItem.populate('supplies'); 
         updateStockSupplies(saveItem._id);
         return saveItem;
     } catch (error) {

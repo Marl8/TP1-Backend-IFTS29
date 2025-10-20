@@ -115,12 +115,34 @@ const deleteUser = async(id)=>{
     }
 };
 
+const loginUser = async ({username, password}) => {
+    try {
+        if (!username || !password) {
+        throw new Error('Faltan datos: username y password son obligatorios');
+        }
+        const user = await User.findOne({ username });
+        if (!user) {
+        throw new Error('Usuario no encontrado');
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+        throw new Error('Contraseña incorrecta');
+        }
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+        return {islogin: true, user: userWithoutPassword};
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 const UserService = {
     saveUser,
     findAllUsers,
     findUserById,
     updateUser,
     deleteUser,
+    loginUser
 };
 
 export default UserService;
