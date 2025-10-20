@@ -22,13 +22,7 @@ const saveUser = async({name, dni, email, username, password, rol})=>{
         });
         const savedUser = await user.save();
         if(savedUser){
-            const userDto = {
-                name: savedUser.name,
-                dni: savedUser.dni,
-                email: savedUser.email,
-                username: savedUser.username,
-                rol: savedUser.rol,
-            }
+            const userDto = createUserDto(savedUser);
             return userDto;
         }else{
             throw new Error('Ocurrió un error en el guardado');
@@ -45,14 +39,7 @@ const findAllUsers = async()=>{
             throw new Error('No hay usuarios registrados en el sistema');
         }
         const listUsers = users.map(us => {
-            const userDto = {
-                id: us.id,
-                name: us.name,
-                dni: us.dni,
-                email: us.email,
-                username: us.username,
-                rol: us.rol,
-            }
+            const userDto = createUserDto(us);
             return userDto;
         })
         return listUsers;
@@ -67,14 +54,7 @@ const findUserById = async(id)=>{
         if(!user){
             throw new Error('Usuario no encontrado');
         }
-        const userDto = {
-            id: user.id,
-            name: user.name,
-            dni: user.dni,
-            email: user.email,
-            username: user.username,
-            rol: user.rol,
-            }
+        const userDto = createUserDto(user);
         return userDto;
     } catch (error) {
         throw new Error(error.message);
@@ -128,13 +108,25 @@ const loginUser = async ({username, password}) => {
         if (!isMatch) {
         throw new Error('Contraseña incorrecta');
         }
-        const userWithoutPassword = user.toObject();
-        delete userWithoutPassword.password;
-        return {islogin: true, user: userWithoutPassword};
+        const userDto = user.toObject();
+        delete userDto.password;
+        return {islogin: true, user: userDto};
     } catch (error) {
         throw new Error(error.message);
     }
 };
+
+function createUserDto(user){
+    const userDto = {
+        id: user.id,
+        name: user.name,
+        dni: user.dni,
+        email: user.email,
+        username: user.username,
+        rol: user.rol,
+    };
+    return userDto;
+}
 
 const UserService = {
     saveUser,
