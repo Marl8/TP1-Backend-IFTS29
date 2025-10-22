@@ -35,6 +35,17 @@ const findUserByIdAPI = async (req, res) => {
     }
 }
 
+// Buscar user por DNI para API 
+
+const findUserByDniAPI = async (req, res) => {
+    try{
+        const {dni} = req.query;
+        const user = await UserService.findUserByDni(dni);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
+}
 
 // Actualiza user API
 
@@ -86,6 +97,7 @@ const UserAPIController = {
     saveUserAPI,
     findUsersAPI,
     findUserByIdAPI,
+    findUserByDniAPI,
     updateUserAPI,
     deleteUserAPI,
     loginAPI,

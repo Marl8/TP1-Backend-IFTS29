@@ -38,6 +38,17 @@ const findCustomerByIdAPI = async (req, res) => {
     }
 }
 
+// Buscar por DNI para API 
+const findCustomerByDniAPI = async (req, res) => {
+    try{
+        const {dni} = req.query;
+        const customer = await CustomerService.findCustomerByDni(dni);
+        res.status(200).json(customer);
+    } catch (error) {
+        res.status(400).json({message: error.message});
+    }
+}
+
 
 // Actualiza para API
 const updateCustomerAPI = async (req, res) => {
@@ -74,6 +85,7 @@ const CustomerAPIController = {
     saveCustomerAPI,
     listCustomersAPI,
     findCustomerByIdAPI,
+    findCustomerByDniAPI,
     updateCustomerAPI,
     deleteCustomerAPI,
 }

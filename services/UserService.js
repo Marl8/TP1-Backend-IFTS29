@@ -61,6 +61,19 @@ const findUserById = async(id)=>{
     }
 };
 
+const findUserByDni = async(dni)=>{
+    try {
+        const user = await User.findOne({'dni': dni});
+        if(!user){
+            throw new Error('Usuario no encontrado');
+        }
+        const userDto = createUserDto(user);
+        return userDto;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 
 const updateUser = async(id, {name, dni, email, username, password, rol})=>{
     try {
@@ -132,6 +145,7 @@ const UserService = {
     saveUser,
     findAllUsers,
     findUserById,
+    findUserByDni,
     updateUser,
     deleteUser,
     loginUser

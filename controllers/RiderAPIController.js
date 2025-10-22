@@ -41,6 +41,19 @@ const findRiderByIdAPI = async(req, res)=>{
 };
 
 
+// Find by DNI Repartidor API
+
+const findRiderByDniAPI = async(req, res)=>{
+    try {
+        const {dni} = req.query;
+        const rider = await RiderService.findRiderByDni(dni);
+        res.status(200).json(rider);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+
 // Update Rider API
 
 const updateRiderAPI = async(req, res)=>{
@@ -93,6 +106,7 @@ const RiderAPIController = {
     saveRiderAPI,
     findRidersAPI,
     findRiderByIdAPI,
+    findRiderByDniAPI,
     updateRiderAPI,
     updateRiderStateAPI,
     deleteRiderAPI,

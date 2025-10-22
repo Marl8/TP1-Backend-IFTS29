@@ -29,7 +29,8 @@ const listCustomers = async () =>{
     }
 };
 
-// Buscar por ID, devuelvo customer
+// Buscar por ID
+
 const findCustomerById = async (id) => {
     try {
         const customer = await Customer.findById(id);
@@ -39,6 +40,18 @@ const findCustomerById = async (id) => {
         throw new Error(error.message);
     }    
 };
+
+// Buscar por DNI
+const findCustomerByDni = async (dni) => {
+    try {
+        const customer = await Customer.findOne({"dni": dni});
+    if (!customer) throw new Error ('Cliente no encontrado');
+    return customer;
+    } catch (error) {
+        throw new Error(error.message);
+    }    
+};
+
 
 // Actualizar cliente
 
@@ -61,7 +74,7 @@ const updateCustomer = async (id, {name, dni, phone, address})=>{
     }
 };
 
-// Eliminar cliente. 
+// Eliminar cliente
 
 async function deleteCustomer (id) {
     try {
@@ -79,6 +92,7 @@ const CustomerService = {
     saveCustomerData,
     listCustomers,
     findCustomerById,
+    findCustomerByDni,
     updateCustomer,
     deleteCustomer,
 };
