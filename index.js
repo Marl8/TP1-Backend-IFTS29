@@ -5,6 +5,7 @@ import CustomerRoutes from './routes/CustomerRoutes.js';
 import WebCustomerRoutes from './routes/WebCustomerRoutes.js';
 import SupplyRoutes from './routes/SupplyRoutes.js';
 import DeliveryOrderRoutes from './routes/DeliveryOrderRoutes.js';
+import WebDeliveryRoutes from './routes/WebDeliveryRoutes.js';
 import MenuItemRoutes from './routes/MenuItemRoutes.js';
 import RiderRoutes from './routes/RiderRoutes.js';
 import UserRoutes from './routes/UserRoutes.js';
@@ -32,6 +33,7 @@ app.use('/api/user', UserRoutes);
 
 //Rutas Web
 app.use('/', WebCustomerRoutes);
+app.use('/', WebDeliveryRoutes);
 
 app.listen(PORT, ()=>{
     connectDB();

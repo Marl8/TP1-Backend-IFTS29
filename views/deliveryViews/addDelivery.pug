@@ -1,0 +1,35 @@
+extends ../layout
+
+block content 
+    h2.mb-4 Agregar Pedido
+
+    a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
+
+    if error 
+        script. 
+        alert('Error: !{error}')
+
+    form(method="post" action="/delivery/save")
+        .mb-3
+            label.form-label(for="customerId") ID del Cliente
+            input.form-control(
+                type="text",
+                name="customerId",
+                id="customerId",
+                placeholder="Ingrese el ID o DNI del cliente",
+                autocomplete="off",
+                required,
+                value=(oldData && oldData.customerId ? oldData.customerId : '')
+        )
+        .mb-3
+            label.form-label(for="items") Ítems del Pedido
+            textarea.form-control(
+                name="items",
+                id="items",
+                rows="3",
+                placeholder="IDs de los productos separados por coma",
+                required
+            ) #{oldData && oldData.items ? oldData.items : ''}
+
+        button.btn.btn-success(type="submit") Guardar
+        a.btn.btn-secondary.ms-2(href="/delivery") Cancelar
