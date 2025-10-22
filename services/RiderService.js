@@ -42,6 +42,19 @@ const findRiderById = async(id)=>{
     }
 };
 
+const findRiderByDni = async(dni)=>{
+    try {
+        const rider = await Rider.findOne({'dni': dni});
+        if(!rider){
+        throw new Error('No exiten repartidores registrados con ese DNI.');
+        }
+        return rider;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+
 const updateRider = async(id, {name, dni, email, phone, state})=> {
     try {
         if(!name || !dni || !email || !phone || !state){
@@ -98,6 +111,7 @@ const RiderService = {
     saveRider,
     findAllRiders,
     findRiderById,
+    findRiderByDni,
     updateRider,
     updateStateRider,
     deleteRider,
