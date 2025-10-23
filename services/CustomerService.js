@@ -1,47 +1,73 @@
 import Customer from '../models/Customer.js';
+import mongoose from 'mongoose';
+import { getNextSequence } from '../models/CounterModel.js'; 
 
-// Guargar un nuevo cliente
 async function saveCustomerData({name, dni, phone, address}) {
     try {
         if (!name || !phone || !address) {
-        throw new Error('Datos incompletos. Se requieren: name, dni, phone, address');
-    }
+            throw new Error('Datos incompletos. Se requieren: name, dni, phone, address');
+        }
 
-    const customer = new Customer({name: name, dni: dni, phone: phone, address: address});
         const found = await Customer.findOne({"dni": dni});
         if(found){
-            throw new Error('Ya existe un Cliente con este id');
+            throw new Error('Ya existe un Cliente con este DNI');
         }
+        
+        const newCustomerId = await getNextSequence('customerId'); 
+
+        const customer = new Customer({
+            customerId: newCustomerId,
+            name: name, 
+            dni: dni, 
+            phone: phone, 
+            address: address
+        });
+
         const saveCustomer = await customer.save();
         return saveCustomer;
     } catch (error) {
         throw new Error(error.message);
-    }    
+    }     
 };
 
-// Listar Clientes
 const listCustomers = async () =>{
     try {
-        const customers = await Customer.find();
+        const customers = await Customer.find().sort({ customerId: 1 });
     return customers;
     } catch (error) {
         throw new Error(error.message);
     }
 };
 
-// Buscar por ID
+const findCustomerById = async (idOrDni) => {
+    const isValidObjectId = mongoose.Types.ObjectId.isValid(idOrDni);
+    
+    let customer;
 
-const findCustomerById = async (id) => {
     try {
-        const customer = await Customer.findById(id);
-    if (!customer) throw new Error ('Cliente no encontrado');
-    return customer;
+        if (isValidObjectId) {
+            customer = await Customer.findById(idOrDni);
+        }
+        
+        if (!customer) {
+            customer = await Customer.findOne({"dni": idOrDni});
+        }
+        
+        if (!customer) {
+            const numericId = parseInt(idOrDni);
+            if (!isNaN(numericId)) {
+                 customer = await Customer.findOne({"customerId": numericId});
+            }
+        }
+
+        if (!customer) throw new Error ('Cliente no encontrado');
+        return customer;
+
     } catch (error) {
         throw new Error(error.message);
-    }    
+    }     
 };
 
-// Buscar por DNI
 const findCustomerByDni = async (dni) => {
     try {
         const customer = await Customer.findOne({"dni": dni});
@@ -49,11 +75,9 @@ const findCustomerByDni = async (dni) => {
     return customer;
     } catch (error) {
         throw new Error(error.message);
-    }    
+    }     
 };
 
-
-// Actualizar cliente
 
 const updateCustomer = async (id, {name, dni, phone, address})=>{
     try {
@@ -73,8 +97,6 @@ const updateCustomer = async (id, {name, dni, phone, address})=>{
         throw new Error(error.message);
     }
 };
-
-// Eliminar cliente
 
 async function deleteCustomer (id) {
     try {

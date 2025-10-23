@@ -1,51 +1,59 @@
 extends ../layout
 
-block content
-  h2.mb-4 Listado de Pedidos
+block content 
+    h2.mb-4 Listado de Pedidos
+    
+    a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
 
-  a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
+    if query.success
+        script.
+            if ('!{query.success}' === 'eliminado') {
+                alert('¡Pedido eliminado con éxito!');
+            } else {
+                alert('¡Pedido creado con éxito!');
+            }
+    if query.error
+        .alert.alert-danger Error: !{query.error}
 
-  if !deliveries || deliveries.length === 0
-    .alert.alert-info.mt-3 No hay pedidos cargados todavía.
-  else
-    .table-responsive
-      table.table.table-striped.table-hover.align-middle
-        thead
-          tr
-            th(scope="col") #
-            th(scope="col") Cliente
-            th(scope="col") Ítems
-            th(scope="col") Estado
-            th(scope="col") Total ($)
-            th(scope="col") Repartidor
-            th(scope="col") Est. Entrega
-            th(scope="col") Plataforma
-            //- th(scope="col" class="text-end") Acciones
-        tbody
-          each d, i in deliveries
-            - const id = d.id || d._id || '';
-            - const customerLabel = (d.customerId && d.customerId.name) ? d.customerId.name : (d.customerId || '');
-            - const itemsCount = Array.isArray(d.items) ? d.items.length : 0;
-            - const st = d.status || 'pending';
-            - const statusClass = st === 'dispatched' ? 'success' : (st === 'preparing' ? 'warning' : 'secondary');
-            - const statusText = st === 'dispatched' ? 'Despachado' : (st === 'preparing' ? 'Preparando' : 'Pendiente');
-            - const riderLabel = (d.assignedRiderId && d.assignedRiderId.name) ? d.assignedRiderId.name : (d.assignedRiderId || '-');
-            - const totalText = (typeof d.total === 'number') ? d.total : '-';
-            - const eta = d.estimatedTime ? d.estimatedTime : '-';
-            - const plataforma = d.plataforma || 'Propia';
-
-            tr
-              td #{i + 1}
-              td #{customerLabel}
-              td #{itemsCount}
-              td
-                span.badge(class=`text-bg-${statusClass}`) #{statusText}
-              td #{totalText}
-              td #{riderLabel}
-              td #{eta}
-              td #{plataforma}
-            //-   td.text-end
-                //- a.btn.btn-sm.btn-primary.me-2(href=`/delivery/update?id=${id}`) Editar
-                //- a.btn.btn-sm.btn-outline-danger.me-2(href=`/delivery/delete?id=${id}`) Eliminar
-                //- form.d-inline(method="post", action=`/delivery/update/${id}`)
-                //-   button.btn.btn-sm.btn-success(type="submit") Despachar
+    if deliveries && deliveries.length
+        table.table.table-striped.table-hover
+            thead.table-dark
+                tr
+                    th #
+                    th ID Cliente
+                    th Nombre Cliente
+                    th Total Ítems
+                    th Estado
+                    th Total ($)
+                    th Repartidor
+                    th Est. Entrega
+                    th Plataforma
+                    th Acciones
+            tbody
+                each delivery in deliveries
+                    tr
+                        td= deliveries.indexOf(delivery) + 1 
+                        td= delivery.customerDisplayId 
+                        td= delivery.customerName 
+                        td= delivery.items.length 
+                        
+                        - var statusText = (delivery.status === 'preparing' ? 'Preparando' : (delivery.status === 'dispatched' ? 'Despachado' : 'Entregado'))
+                        - var statusClass = (delivery.status === 'preparing' ? 'bg-warning' : (delivery.status === 'dispatched' ? 'bg-primary' : 'bg-success'))
+                        td 
+                            span.badge(class=statusClass)= statusText
+                            
+                        td= delivery.total
+                        td= delivery.assignedRiderId || '-'
+                        td= delivery.estimatedDelivery || '-'
+                        td= delivery.plataforma
+                        
+                        td
+                            if query.action === 'edit'
+                                a.btn.btn-sm.btn-primary(href=`/delivery/update?id=${delivery.id}`) Editar
+                            else if query.action === 'delete'
+                                a.btn.btn-sm.btn-danger(href=`/delivery/delete?id=${delivery.id}`) Eliminar
+                            else
+                                a.btn.btn-sm.btn-primary(href=`/delivery/update?id=${delivery.id}`) Editar
+                                a.btn.btn-sm.btn-danger.ms-2(href=`/delivery/delete?id=${delivery.id}`) Eliminar
+    else
+        p.text-muted No hay pedidos registrados aún.

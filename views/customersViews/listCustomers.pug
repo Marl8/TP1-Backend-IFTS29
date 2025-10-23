@@ -1,30 +1,32 @@
-extends ../layout
+extends ../layout 
 
 block content
-  h2.mb-4 Listado de Clientes 
-  
-  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+    h2.mb-4 Listado de Clientes 
+    
+    a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
 
-  if customers.length
-    table.table.table-striped.table-hover
-      thead.table-dark
-        tr
-          th DNI
-          th Nombre
-          th Teléfono
-          th Dirección
-          th Acciones
-      tbody
-        each customer in customers
-          tr
-            td #{customer.dni}
-            td #{customer.name}
-            td #{customer.phone}
-            td #{customer.address}
-            td
-              a.btn.btn-sm.btn(style="background-color:#343a40; color:white; border:none;", href=`/customers/update?id=${customer.id}`) ✏️
-              
-              form(action=`/customers/delete/${customer.id}?_method=DELETE`, method="POST", style="display:inline")
-                button(type="submit", class="btn btn-sm btn-danger ms-2") 🗑️ 
-  else
-    p.text-muted No hay clientes registrados aún.
+    if customers && customers.length
+        table.table.table-striped.table-hover
+            thead.table-dark
+                tr
+                    th ID Cliente
+                    th Nombre
+                    th DNI
+                    th Teléfono
+                    th Dirección
+                    th Acciones
+            tbody
+                each customer in customers
+                    tr
+                        td= customer.customerId
+                        td= customer.name
+                        td= customer.dni
+                        td= customer.phone
+                        td= customer.address
+                        td
+                            a.btn.btn-sm.btn(style="background-color:#343a40; color:white; border:none;", href=`/customers/update?id=${customer._id}`) ✏️
+                            
+                            form(action=`/customers/delete/${customer._id}?_method=DELETE`, method="POST", style="display:inline")
+                                button(type="submit", class="btn btn-sm btn-danger ms-2") 🗑️ 
+    else
+        p.text-muted No hay clientes registrados aún.
