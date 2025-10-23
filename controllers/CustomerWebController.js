@@ -7,7 +7,7 @@ const saveCustomerWeb = async (req, res) => {
         await CustomerService.saveCustomerData(req.body);
         res.redirect('/customers?success=1');
     } catch (err) {
-        res.render('addCustomer', {
+        res.render('customersViews/addCustomer', {
             title: 'Agregar Cliente',
             error: err.message,
             oldData: req.body
@@ -20,7 +20,7 @@ const saveCustomerWeb = async (req, res) => {
 const listCustomersWeb = async (req, res)=>{
     try {
         const customers = await CustomerService.listCustomers();
-        res.render('listCustomers', {
+        res.render('customersViews/listCustomers', {
         title: 'Listado de Clientes',
         customers
         })
@@ -49,7 +49,7 @@ const showCustomerToEdit = async (req, res) => {
     } catch (err) {
         error = err.message;
         }
-    res.render('updateCustomer', { id, customer, error });
+    res.render('customersViews/updateCustomer', { id, customer, error });
 };
 
 const showCustomerToDelete = async (req, res) => {
@@ -61,7 +61,7 @@ const showCustomerToDelete = async (req, res) => {
     } catch (err) {
         error = err.message;
     }
-    res.render('deleteCustomer', { id, customer, error });
+    res.render('customersViews/deleteCustomer', { id, customer, error });
 };
 
 
@@ -72,7 +72,7 @@ const updateCustomerWeb = async (req, res) => {
         const result = await CustomerService.updateCustomer(id, req.body);
 
         if (result.error) {
-            return res.render('editCustomer', { 
+            return res.render('customersViews/editCustomer', { 
                 title: 'Editar Cliente', 
                 error: result.error,
                 customer: { ...req.body, id }

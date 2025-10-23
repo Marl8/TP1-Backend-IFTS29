@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
   h2.mb-5.text-center Clientes
@@ -10,6 +10,8 @@ block content
   if query.error
     script.
       alert('Error: ');
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/") ← Volver al menú
 
   .d-flex.flex-column.align-items-center.g-3
     a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href= "/customers/add") ➕ Agregar Cliente

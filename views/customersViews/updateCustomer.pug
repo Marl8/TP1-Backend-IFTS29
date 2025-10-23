@@ -1,4 +1,4 @@
-extends layout 
+extends ../layout 
 
 block content
     h2.mb-4 Editar Cliente 
@@ -17,11 +17,11 @@ block content
         hr
         form(method="post" action=`/customers/update/${customer.id}`)
             .mb-3
-                label.form-label(for="id") ID
-                input.form-control(type="number", name="id", id="id", value=customer.id readonly)
-            .mb-3
                 label.form-label(for="name") Nombre
                 input.form-control(type="text", name="name", id="name", value=customer.name required)
+            .mb-3
+                label.form-label(for="dni") DNI
+                input.form-control(type="number", name="dni", id="dni", value=customer.dni readonly)
             .mb-3
                 label.form-label(for="phone") Teléfono
                 input.form-control(type="text", name="phone", id="phone", value=customer.phone required)
