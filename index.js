@@ -10,6 +10,7 @@ import MenuItemRoutes from './routes/MenuItemRoutes.js';
 import RiderRoutes from './routes/RiderRoutes.js';
 import UserRoutes from './routes/UserRoutes.js';
 import { connectDB } from './data/MongoConnection.js';
+import WebRiderRoutes from './routes/WebRiderRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -32,8 +33,9 @@ app.use('/api/rider', RiderRoutes);
 app.use('/api/user', UserRoutes);
 
 //Rutas Web
-app.use('/', WebCustomerRoutes);
-app.use('/', WebDeliveryRoutes);
+app.use('/', WebCustomerRoutes);       
+app.use('/delivery', WebDeliveryRoutes); 
+app.use('/riders', WebRiderRoutes);
 
 app.listen(PORT, ()=>{
     connectDB();
