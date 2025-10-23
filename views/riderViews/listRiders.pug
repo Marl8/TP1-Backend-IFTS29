@@ -1,0 +1,41 @@
+extends ../layout
+
+block content
+  h2.mb-4 Listado de Repartidores
+  
+  a.btn.btn-secondary.mb-3.ms-2(href="/riders") ← Volver al menú
+
+  if riders && riders.length
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+        
+          th ID
+          th Nombre
+          th DNI
+          th Email
+          th Teléfono
+          th Vehículo
+          th Patente
+          th Estado
+          th Acciones
+      tbody
+        each rider in riders
+          tr
+            
+            td= rider.riderId
+            td= rider.name
+            td= rider.dni
+            td= rider.email
+            td= rider.phone
+            td= rider.vehicle
+            td= rider.patente
+            td= rider.state
+            td
+              
+              a.btn.btn-sm.btn(style="background-color:#343a40; color:white; border:none;", href=`/riders/update?id=${rider.riderId}`) ✏️
+              
+             
+              
+  else
+    p.text-muted No hay repartidores registrados aún.
