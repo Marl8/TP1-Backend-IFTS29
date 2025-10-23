@@ -1,25 +1,53 @@
 import Rider from '../models/Rider.js';
+import { getNextSequence } from '../models/CounterModel.js'; 
 
-const saveRider = async ({name, dni, email, phone, state})=>{
+
+const saveRider = async ({name, dni, email, phone, state, vehicle, patente})=>{ 
     try {
-        if(!name || !dni || !email || !phone || !state){
-            throw new Error('Datos incompletos. Se requieren: name, dni, phone, state');
+        
+        if(!name || !dni || !email || !phone || !state || !vehicle){
+            throw new Error('Datos incompletos. Se requieren: name, dni, email, phone, state y vehicle');
         }
+         
+       
+        if (!/^[a-zA-Z\s]+$/.test(name)) {
+            throw new Error('El nombre solo debe contener letras y espacios.');
+        }
+        if (!/^\d+$/.test(dni)) {
+            throw new Error('El DNI solo debe contener números.');
+        }
+        if (!email.includes('@')) {
+            throw new Error('El email debe ser válido (faltó el @).');
+        }
+        if (!/^\d+$/.test(phone)) {
+            throw new Error('El teléfono solo debe contener números.');
+        }
+        
+
         const found = await Rider.findOne({'dni': dni});
         if(found){
             throw new Error('El repartidor ya existe');
         }
-        const rider = new Rider({name: name, dni: dni, email: email, phone: phone, state: state});
+         
+        const newRiderId = await getNextSequence('riderId');
+         
+        const rider = new Rider({
+            riderId: newRiderId,
+            name, dni, email, phone, state, vehicle,
+            patente: patente || 'N/A' 
+        });
+         
         const savedRider = await rider.save();
         return savedRider;
     } catch (error) {
         throw new Error(error.message);
-    }   
+    }  
 };
+
 
 const findAllRiders = async()=>{
     try {
-        const riders = await Rider.find();
+        const riders = await Rider.find().sort({ riderId: 1 });
     if(riders.length === 0){
         throw new Error('No hay repartidores registrados en la base de datos.');
     }
@@ -32,7 +60,7 @@ const findAllRiders = async()=>{
 
 const findRiderById = async(id)=>{
     try {
-        const rider = await Rider.findById(id);
+        const rider = await Rider.findOne({ riderId: id });
         if(!rider){
         throw new Error('No exiten repartidores registrados con ese id.');
         }
@@ -41,6 +69,7 @@ const findRiderById = async(id)=>{
         throw new Error(error.message);
     }
 };
+
 
 const findRiderByDni = async(dni)=>{
     try {
@@ -55,15 +84,34 @@ const findRiderByDni = async(dni)=>{
 };
 
 
-const updateRider = async(id, {name, dni, email, phone, state})=> {
+const updateRider = async(id, dataToUpdate)=> {
     try {
-        if(!name || !dni || !email || !phone || !state){
-        return ({error: 'Datos incompletos. Se requieren: name, dni, phone, state'});
+        const {name, dni, email, phone, state, vehicle, patente} = dataToUpdate; 
+        
+        if(!name || !dni || !email || !phone || !state || !vehicle){
+            return ({error: 'Datos incompletos. Se requieren: name, dni, email, phone, state y vehicle'});
         }
-        const updatedRider = await Rider.findByIdAndUpdate(id, {name, dni, email, phone, state}, {
-            new: true,
-            runValidators: true,
-        });
+
+        
+        if (!/^[a-zA-Z\s]+$/.test(name)) {
+            return ({error: 'El nombre solo debe contener letras y espacios.'});
+        }
+        if (!/^\d+$/.test(dni)) {
+            return ({error: 'El DNI solo debe contener números.'});
+        }
+        if (!email.includes('@')) {
+            return ({error: 'El email debe ser válido (faltó el @).'});
+        }
+        if (!/^\d+$/.test(phone)) {
+            return ({error: 'El teléfono solo debe contener números.'});
+ S     }
+        
+
+        const updatedRider = await Rider.findOneAndUpdate(
+            { riderId: id }, 
+            {name, dni, email, phone, state, vehicle, patente: patente || 'N/A'}, 
+            { new: true, runValidators: true }
+        );
         if(!updatedRider){
             return {error: 'Repartidor no encontrado'};
         }
@@ -73,12 +121,13 @@ const updateRider = async(id, {name, dni, email, phone, state})=> {
     }
 };
 
+
 const updateStateRider = async(id)=> {
     try {
         if(!id){
         return ({error: 'Datos incompletos.'});
         }
-        const rider = await Rider.findById(id);
+        const rider = await Rider.findOne({ riderId: id });
         if(!rider){ 
             return {error: 'Repartidor no encontrado'};
         }
@@ -97,7 +146,7 @@ const updateStateRider = async(id)=> {
 
 async function deleteRider(id) {
     try {
-        const deleteRider = await Rider.findByIdAndDelete(id);
+        const deleteRider = await Rider.findOneAndDelete({ riderId: id });
         if (!deleteRider){
             return null;
         } 
@@ -106,6 +155,7 @@ async function deleteRider(id) {
         throw new Error(error.message);
     }
 };
+
 
 const RiderService = {
     saveRider,
