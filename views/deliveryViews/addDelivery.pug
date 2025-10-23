@@ -5,31 +5,95 @@ block content
 
     a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
 
+    
+    if query.error
+        .alert.alert-danger
+            | Error al Guardar Pedido: !{decodeURIComponent(query.error)}
+            
+    
     if error 
-        script. 
-        alert('Error: !{error}')
+        .alert.alert-danger
+            | Error de Búsqueda: #{error}
 
-    form(method="post" action="/delivery/save")
-        .mb-3
-            label.form-label(for="customerId") ID del Cliente
+    
+    form(method="get" action="/delivery/add")
+        .mb-3.d-flex.flex-column
+            label.form-label(for="customerId") Buscar Cliente por ID o DNI
             input.form-control(
                 type="text",
                 name="customerId",
                 id="customerId",
-                placeholder="Ingrese el ID o DNI del cliente",
+                placeholder="Ingrese ID o DNI del cliente",
                 autocomplete="off",
                 required,
-                value=(oldData && oldData.customerId ? oldData.customerId : '')
-        )
-        .mb-3
-            label.form-label(for="items") Ítems del Pedido
-            textarea.form-control(
-                name="items",
-                id="items",
-                rows="3",
-                placeholder="IDs de los productos separados por coma",
-                required
-            ) #{oldData && oldData.items ? oldData.items : ''}
+                value=query.customerId || '' 
+            )
+            button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
 
-        button.btn.btn-success(type="submit") Guardar
-        a.btn.btn-secondary.ms-2(href="/delivery") Cancelar
+    hr
+
+    
+    if customer 
+        h3.mb-3 Cliente Encontrado
+        .alert.alert-success
+            p #[strong Nombre:] #{customer.name}
+            p #[strong Teléfono:] #{customer.phone}
+            p #[strong Dirección:] #{customer.address}
+
+        
+        form(method="post" action="/delivery/save")
+            
+            input(type="hidden", name="customerId", value=customer._id) 
+            
+            
+
+            
+            .mb-3
+                label.form-label(for="items") Ítems del Pedido #[strong (ID de Producto:Cantidad)]
+                textarea.form-control(
+                    name="items",
+                    id="items",
+                    rows="3",
+                    placeholder="Escriba los ítems en formato ID:Cantidad, separados por coma (Ej: 101:2, 105:1)",
+                    required
+                )
+
+            
+            .mb-3
+                label.form-label(for="estado") Estado
+                select.form-select(name="estado", id="estado", required)
+                    option(value="preparing" selected) Preparando
+                    option(value="dispatched") Despachado
+                    option(value="delivered") Entregado
+
+            
+            .mb-3
+                label.form-label(for="total") Total ($)
+                input.form-control(type="number", name="total", id="total", placeholder="Campo opcional/calculado")
+
+            
+            .mb-3
+                label.form-label(for="repartidor") ID Repartidor Asignado
+                input.form-control(type="text", name="repartidor", id="repartidor", placeholder="Ej: 1 (ID Corto del Repartidor)")
+
+            
+            .mb-3
+                label.form-label(for="estEntrega") Estimado de Entrega (Minutos)
+                input.form-control(type="number", name="estEntrega", id="estEntrega", placeholder="Ej: 30")
+
+            
+            .mb-3
+                label.form-label(for="plataforma") Plataforma
+                select.form-select(name="plataforma", id="plataforma", required)
+                    option(value="Propia" selected) Propia
+                    option(value="Rappi") Rappi
+                    option(value="PedidosYa") PedidosYa
+                    option(value="Uber Eats") Uber Eats
+
+
+            
+            button.btn.btn-success(type="submit") Guardar Pedido
+            a.btn.btn-secondary.ms-2(href="/delivery") Cancelar
+            
+    else if query.customerId
+        .alert.alert-warning No se encontró el cliente. Por favor, revise el ID/DNI.

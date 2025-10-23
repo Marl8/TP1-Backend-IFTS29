@@ -4,14 +4,14 @@ import CustomerService from '../services/CustomerService.js';
 // SAVE web 
 const saveCustomerWeb = async (req, res) => {
     try {
-        await CustomerService.saveCustomerData(req.body);
-        res.redirect('/customers?success=1');
+        const newCustomer = await CustomerService.saveCustomerData(req.body);
+        
+        const successMessage = `Cliente ${newCustomer.customerId} guardado con éxito`;
+        
+        res.redirect(`/customers?success=${encodeURIComponent(successMessage)}`);
     } catch (err) {
-        res.render('customersViews/addCustomer', {
-            title: 'Agregar Cliente',
-            error: err.message,
-            oldData: req.body
-        })
+        const errorMessage = encodeURIComponent(err.message);
+        res.redirect(`/customers/add?error=${errorMessage}`);
     }
 };
 
@@ -29,16 +29,6 @@ const listCustomersWeb = async (req, res)=>{
     }
 }
 
-
-/*/ Buscar por id para Web
-const findCustomerByIdWeb = async (id) => {
-    try {
-        const customer = await CustomerService.findCustomerById(id);
-        return customer;
-    } catch (error) {
-        throw new Error(error.message);
-    }   
-};*/
 
 const showCustomerToEdit = async (req, res) => {
     const id = req.query.id;
@@ -81,7 +71,7 @@ const updateCustomerWeb = async (req, res) => {
         res.redirect(`/customers?success=${encodeURIComponent(result.message)}`);
     } catch (error) {
         throw new Error(error.message);
-    }    
+    }     
 };
 
 
@@ -93,7 +83,7 @@ const deleteCustomerWeb = async (req, res) => {
         if (!result) {
             return res.status(400).send('Usuario no encontrado');
         }
-        res.redirect('/customers/list'); // vuelve al listado
+        res.redirect('/customers/list');
     } catch (error) {
         throw new Error(error.message);
     }

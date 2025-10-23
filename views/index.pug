@@ -1,30 +1,68 @@
 extends layout 
 
 block content 
-    .row.justify-content-center.g-5
-        .col-md-5
-            .card.shadow.text-center
-                .card-body
+    // Usamos g-3 para un margen decente y centramos el bloque total
+    .row.justify-content-center.g-3
+        
+        // --- TARJETA 1: CLIENTES ---
+        // col-6 asegura que ocupe el 50%
+        .col-6.col-md-6
+            .card.shadow.text-center.h-100.d-flex.flex-column.justify-content-between.card-custom-height
+                .card-body.d-flex.flex-column.justify-content-center
                     h5.card-title 👤 Clientes
                     p.card-text Administra los clientes registrados en el sistema.
-                    a.btn.btn-primary(href="/customers") Ir a CRUD Cliente
-        .col-md-5
-            .card.shadow.text-center
-                .card-body
+                    div.mt-auto
+                        a.btn.btn-primary(href="/customers") Ir a CRUD Cliente 
+        
+        // --- TARJETA 2: PEDIDOS ---
+        .col-6.col-md-6
+            .card.shadow.text-center.h-100.d-flex.flex-column.justify-content-between.card-custom-height
+                .card-body.d-flex.flex-column.justify-content-center
                     h5.card-title 🛒 Pedidos
                     p.card-text Gestiona los pedidos de los clientes.
-                    a.btn.btn-success(href="/delivery") Ir a CRUD Pedido
-        .col-md-5
-            .card.shadow.text-center
-                .card-body
-                    h5.card-title Repartidores
-                    p.card-text Gestiona los repartidores.
-                    a.btn.btn-warning(href="/riders") Ir a CRUD Repartidores
-        .col-md-5
-            .card.shadow.text-center
-                .card-body
+                    div.mt-auto
+                        a.btn.btn-success(href="/delivery") Ir a CRUD Pedido
+
+        // --- SALTO DE LÍNEA FORZADO EN BOOTSTRAP (col-12 ocupa la fila completa) ---
+        // Este div invisible asegura que el siguiente elemento comience abajo.
+        .col-12.d-none.d-md-block
+            
+        // --- TARJETA 3: REPARTIDORES ---
+        .col-md-6
+            .card.shadow.text-center.h-100.d-flex.flex-column.justify-content-between.card-custom-height
+                .card-body.d-flex.flex-column.justify-content-center
+                    h5.card-title 🏍️ Repartidores
+                    p.card-text Administra los repartidores del restaurante.
+                    div.mt-auto
+                        a.btn.btn-warning(href="/riders") Ir a CRUD Repartidores
+        
+        // --- TARJETA 4: UNBOTON ---
+        .col-md-6
+            .card.shadow.text-center.h-100.d-flex.flex-column.justify-content-between.card-custom-height
+                .card-body.d-flex.flex-column.justify-content-center
                     h5.card-title UnBoton
                     p.card-text Gestiona los ...
-                    a.btn.btn-success(href="#") Ir a CRUD ...
+                    div.mt-auto
+                        a.btn.btn-success(href="#") Ir a CRUD ...
 
-                    
+    // --- ESTILOS CSS FIJOS ---
+    style.
+        .card-custom-height {
+            min-height: 230px; 
+            max-width: 380px;
+            margin: 0 auto;
+            transition: all 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .card-text {
+            margin-bottom: 10px;
+        }
+        .mt-auto {
+            margin-top: auto; 
+        }

@@ -1,14 +1,19 @@
-extends ../layout 
+extends ../layout
+
 block content
   h2.mb-5.text-center Gestión de Repartidores
 
-  
+  a.btn.btn-secondary.mb-3.ms-2(href="/") ← Volver al Menú
+
   if query.success
     script.
-      alert('Repartidor guardado con éxito!');
+      if ('!{query.success}' === 'eliminado') {
+          alert('¡Repartidor eliminado con éxito!');
+      } else {
+          alert('Repartidor guardado con éxito!');
+      }
   if query.error
-    script.
-      alert('Error: ' + decodeURIComponent('#{query.error}'));
+    .alert.alert-danger Error: !{query.error}
 
   .d-flex.flex-column.align-items-center.g-3
     a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/add") ➕ Agregar Repartidor

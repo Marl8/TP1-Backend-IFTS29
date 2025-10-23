@@ -4,24 +4,21 @@ import { findData, writeData } from "../data/db.js";
 const EXTERNAL_PLATFORMS = ["Rappi", "PedidosYa", "Uber Eats"];
 
 const DeliveryService = {
-  crearPedido(customerId, items) {
+  crearPedido(customerId, items, estado, total, repartidor, estEntrega, plataforma) {
     const db = findData();
 
-    if (!customerId || !Array.isArray(items) || items.length === 0) {
-      throw new Error("Datos incompletos o items inválidos");
-    }
-
-    const customer = db.customer.find(c => c.id === customerId);
-    if (!customer) {
-      throw new Error(`Cliente con id ${customerId} no existe`);
+    if (!customerId || !Array.isArray(items) || items.length === 0 || !estado || !plataforma) {
+      throw new Error("Datos incompletos. Se requieren: Cliente, Ítems, Estado y Plataforma.");
     }
 
     const menuItems = db.MenuItem;
-    let total = 0;
+    let calculatedTotal = 0;
     const itemsConDatos = [];
 
     for (let pedidoItem of items) {
-      const menuItem = menuItems.find(mi => mi.id === pedidoItem.id);
+      const itemIDFromForm = String(pedidoItem.id); 
+      const menuItem = menuItems.find(mi => String(mi.id) === itemIDFromForm);
+        
       if (!menuItem) {
         throw new Error(`Item con id ${pedidoItem.id} no existe`);
       }
@@ -30,7 +27,7 @@ const DeliveryService = {
       }
 
       menuItem.stock -= pedidoItem.quantity;
-      total += menuItem.price * pedidoItem.quantity;
+      calculatedTotal += menuItem.price * pedidoItem.quantity;
 
       itemsConDatos.push({
         id: menuItem.id,
@@ -40,8 +37,18 @@ const DeliveryService = {
       });
     }
 
-    const nuevoPedido = new DeliveryOrder(Date.now(), customerId, total, "preparing", "Propia");
-    nuevoPedido.setItems(itemsConDatos);
+    const finalTotal = total ? parseFloat(total) : calculatedTotal; 
+
+    const nuevoPedido = new DeliveryOrder({ 
+        id: Date.now(), 
+        customerId: customerId,
+        total: finalTotal,
+        status: estado, 
+        plataforma: plataforma,
+        items: itemsConDatos,
+        assignedRiderId: repartidor || null,
+        estimatedDelivery: estEntrega || null
+    });
 
     db.deliveryOrder.push(nuevoPedido);
     writeData(db);
@@ -60,17 +67,20 @@ const DeliveryService = {
       throw new Error(`Plataforma inválida. Debe ser: ${EXTERNAL_PLATFORMS.join(", ")}`);
     }
 
-    const customer = db.customer.find(c => c.id === customerId);
+    const customer = db.customer.find(c => c.id === customerId || c._id === customerId);
+    
     if (!customer) {
       throw new Error(`Cliente con id ${customerId} no existe`);
     }
-
+    
     const menuItems = db.MenuItem;
     let total = 0;
     const itemsConDatos = [];
 
     for (let pedidoItem of items) {
-      const menuItem = menuItems.find(mi => mi.id === pedidoItem.id);
+      const itemIDFromForm = String(pedidoItem.id); 
+      const menuItem = menuItems.find(mi => String(mi.id) === itemIDFromForm);
+        
       if (!menuItem) {
         throw new Error(`Item con id ${pedidoItem.id} no existe`);
       }
@@ -89,8 +99,14 @@ const DeliveryService = {
       });
     }
 
-    const nuevoPedido = new DeliveryOrder(Date.now(), customerId, total, "pending", plataforma);
-    nuevoPedido.setItems(itemsConDatos);
+    const nuevoPedido = new DeliveryOrder({
+        id: Date.now(), 
+        customerId: customerId,
+        total: total,
+        status: "pending",
+        plataforma: plataforma,
+        items: itemsConDatos
+    });
 
     db.externalOrders.push(nuevoPedido);
     writeData(db);
@@ -157,6 +173,20 @@ const DeliveryService = {
     writeData(db);
 
     return pedido;
+  },
+
+  eliminarPedido(id) {
+    const db = findData();
+    const initialLength = db.deliveryOrder.length;
+
+    db.deliveryOrder = db.deliveryOrder.filter(p => String(p.id) !== String(id));
+
+    if (db.deliveryOrder.length === initialLength) {
+        throw new Error("Pedido no encontrado para eliminar");
+    }
+
+    writeData(db);
+    return true;
   },
 
   filtrarPorPlataforma(plataforma) {

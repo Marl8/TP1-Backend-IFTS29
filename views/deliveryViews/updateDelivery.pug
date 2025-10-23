@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+    h2.mb-4 Editar Pedido
+
+    a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
+    
+    if error
+        p.text-danger.mt-2 #{error}
+
+    form(method="get" action="/delivery/update")
+        .mb-3.d-flex.flex-column
+            label.form-label(for="id") Ingresa el ID del pedido a editar
+            input.form-control(type="text", name="id", id="id", required value=query.id || '')
+            button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
+
+    if delivery
+        hr
+        h3.mb-3 Pedido ID: #{delivery.id}
+        
+        form(method="post" action=`/delivery/update/${delivery.id}`)
+            
+            .mb-3
+                label.form-label Cliente ID
+                input.form-control(type="text", value=delivery.customerId || 'N/A', readonly)
+
+            .mb-3
+                label.form-label(for="estado") Estado
+                select.form-select(name="estado", id="estado", required)
+                    option(value="preparing" selected=delivery.status === 'preparing') Preparando
+                    option(value="dispatched" selected=delivery.status === 'dispatched') Despachado
+                    option(value="delivered" selected=delivery.status === 'delivered') Entregado
+            
+            .mb-3
+                label.form-label Ítems (Solo lectura)
+                textarea.form-control(rows="3", readonly)= JSON.stringify(delivery.items)
+            
+            .mb-3
+                label.form-label(for="total") Total ($)
+                input.form-control(type="number", name="total", id="total", value=delivery.total)
+
+            .mb-3
+                label.form-label(for="repartidor") ID Repartidor Asignado
+                input.form-control(type="text", name="repartidor", id="repartidor", value=delivery.assignedRiderId || '')
+
+            button.btn.btn-success(type="submit") Guardar Cambios
+            a.btn.btn-secondary.ms-2(href="/delivery") Cancelar
+
+    else if query.id
+        p.text-warning.mt-2 No se encontró el pedido con ID #{query.id}.
