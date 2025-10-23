@@ -12,6 +12,7 @@ router.get('/delivery', (req, res) => {
     res.render('deliveryViews/deliveryMenu', { title: 'Pedidos', deliveries: db.deliveryOrder, query: req.query });
 });
 router.get("/delivery/add", DeliveryWebController.showAddForm);
+router.post("/delivery/add/findCustomer", DeliveryWebController.findCustomerForAdd);
 router.get("/delivery/list", DeliveryWebController.listDeliveriesWeb);
 router.get("/delivery/delete", DeliveryWebController.showDeliveryToDelete);
 
