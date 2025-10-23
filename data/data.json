@@ -5,14 +5,14 @@
       "name": "milanesa",
       "price": 4500,
       "category": "minuta",
-      "stock": 14
+      "stock": 0
     },
     {
       "id": 2,
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 39
+      "stock": 35
     },
     {
       "id": 3,
@@ -167,184 +167,13 @@
   ],
   "deliveryOrder": [
     {
-      "id": 1758374348997,
-      "customerId": 1,
-      "items": [
-        {
-          "id": 1,
-          "name": "Milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": 3,
-          "name": "Pizza",
-          "price": 6500,
-          "quantity": 1
-        }
-      ],
+      "customerId": "68fa9047618c6dcc20c2b834",
+      "items": [],
       "status": "preparing",
-      "total": 15500,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758374895008,
-      "customerId": 2,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 1
-        },
-        {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 8500,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758374926799,
-      "customerId": 2,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 1
-        },
-        {
-          "id": 3,
-          "name": "ensalada mixta",
-          "price": 3000,
-          "quantity": 4
-        }
-      ],
-      "status": "preparing",
-      "total": 16500,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 10001,
-      "customerId": 1,
-      "items": [
-        {
-          "id": 1,
-          "name": "Milanesa",
-          "price": 4500,
-          "quantity": 2
-        }
-      ],
-      "status": "preparing",
-      "total": 9000,
-      "plataforma": "Rappi"
-    },
-    {
-      "id": 1758377575686,
-      "customerId": 2,
-      "items": [
-        {
-          "id": 2,
-          "name": "hamburguesa",
-          "price": 4000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 4000,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758396533665,
-      "customerId": 1,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": 3,
-          "name": "ensalada mixta",
-          "price": 3000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 12000,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758396851940,
-      "customerId": 1,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        },
-        {
-          "id": 3,
-          "name": "ensalada mixta",
-          "price": 3000,
-          "quantity": 1
-        }
-      ],
-      "status": "preparing",
-      "total": 12000,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758397006040,
-      "customerId": 2,
-      "items": [
-        {
-          "id": 3,
-          "name": "ensalada mixta",
-          "price": 3000,
-          "quantity": 3
-        }
-      ],
-      "status": "preparing",
-      "total": 9000,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758398135441,
-      "customerId": 1,
-      "items": [
-        {
-          "id": 3,
-          "name": "ensalada mixta",
-          "price": 3000,
-          "quantity": 3
-        }
-      ],
-      "status": "preparing",
-      "total": 9000,
-      "plataforma": "Propia"
-    },
-    {
-      "id": 1758399337176,
-      "customerId": 2,
-      "items": [
-        {
-          "id": 1,
-          "name": "milanesa",
-          "price": 4500,
-          "quantity": 2
-        }
-      ],
-      "status": "preparing",
-      "total": 9000,
-      "plataforma": "Uber Eats"
+      "total": 8000,
+      "assignedRiderId": null,
+      "plataforma": "Propia",
+      "_id": "68fa9d1ece8e0cc69267e03d"
     }
   ],
   "externalOrders": [

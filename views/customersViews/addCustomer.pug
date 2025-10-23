@@ -1,27 +1,32 @@
 extends ../layout
 
 block content
-  h2.mb-4 Agregar Cliente
+    h2.mb-4 Agregar Cliente
 
-  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+    a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
 
-  if error 
-    script. 
-      alert('Error: !{error}')
+    if query.error
+        .alert.alert-danger Error: !{query.error}
 
-  form(method="post" action="/customers/save")
-    .mb-3
-      label.form-label(for="name") Nombre
-      input.form-control(type="text", name="name", id="name",autocomplete="name", required)
-    .mb-3
-      label.form-label(for="dni") DNI
-      input.form-control(type="number", name="dni", id="dni",autocomplete="off", required)
-    .mb-3
-      label.form-label(for="phone") Teléfono
-      input.form-control(type="text", name="phone", id="phone",autocomplete="tel", required)
-    .mb-3
-      label.form-label(for="address") Dirección
-      input.form-control(type="text", name="address", id="address",autocomplete="street-address", required)
+    form(method="post" action="/customers/save")
+        .mb-3
+            label.form-label(for="name") Nombre
+            input.form-control(type="text", name="name", id="name", autocomplete="name", required,
+                pattern="[a-zA-Z\\s]+", 
+                title="El nombre solo debe contener letras y espacios")
+        .mb-3
+            label.form-label(for="dni") DNI
+            input.form-control(type="number", name="dni", id="dni", autocomplete="off", required,
+                pattern="\\d+", 
+                title="El DNI solo debe contener números")
+        .mb-3
+            label.form-label(for="phone") Teléfono
+            input.form-control(type="text", name="phone", id="phone", autocomplete="tel", required,
+                pattern="\\d+", 
+                title="El teléfono solo debe contener números")
+        .mb-3
+            label.form-label(for="address") Dirección
+            input.form-control(type="text", name="address", id="address", autocomplete="street-address", required)
 
-    button.btn.btn-success(type="submit") Guardar
-    a.btn.btn-secondary.ms-2(href="/customers") Cancelar
+        button.btn.btn-success(type="submit") Guardar
+        a.btn.btn-secondary.ms-2(href="/customers") Cancelar

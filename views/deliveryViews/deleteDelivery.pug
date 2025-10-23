@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    if delivery
+        h2.mb-4 Eliminar Pedido
+        
+        a.btn.btn-secondary.mb-3(href="/delivery/list") ← Volver al listado
+        
+        hr
+        h4 ¿Estás seguro de que quieres eliminar este pedido?
+        
+        table.table.table-striped.table-hover
+            thead.table-dark
+                tr
+                    th ID Pedido
+                    th Cliente
+                    th Total ($)
+                    th Estado
+            tbody
+                tr
+                    td= delivery.id
+                    td= customerName
+                    td= delivery.total
+                    td= delivery.status
+        
+        form(action=`/delivery/delete/${delivery.id}?_method=DELETE`, method="POST", style="display:inline")
+            button.btn.btn-danger(type="submit") Sí, eliminar
+            a.btn.btn-secondary.ms-2(href="/delivery/list") Cancelar
+
+    else
+        h2.mb-4 Error
+        .alert.alert-danger No se especificó o no se encontró el pedido a eliminar.
+        a.btn.btn-primary(href="/delivery/list") Volver al listado

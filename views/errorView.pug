@@ -1,0 +1,10 @@
+.alert.alert-danger.mt-5
+    h1.display-4 Error del Servidor
+    p.lead Ha ocurrido un error inesperado al procesar la solicitud.
+    
+    // Mostramos el mensaje de error que enviamos desde el controlador
+    if message 
+      p #[strong Mensaje:] #{message}
+
+    // Botón para volver al inicio
+    a.btn.btn-primary.mt-3(href="/") Volver al Inicio

@@ -11,7 +11,11 @@ router.get('/customers', (req, res) => {
     const db = findData();
     res.render('customersViews/customers', { title: 'Clientes', customers: db.customer, query: req.query });
 });
-router.get('/customers/add', (req, res) => res.render('customersViews/addCustomer', {title: 'Agregar Cliente'}));
+// --- ARREGLO CLAVE: Pasamos req.query al render ---
+router.get('/customers/add', (req, res) => res.render('customersViews/addCustomer', {
+    title: 'Agregar Cliente',
+    query: req.query // <--- CORREGIDO
+}));
 router.get('/customers/list', CustomerWebController.listCustomersWeb);
 router.get('/customers/update', CustomerWebController.showCustomerToEdit);
 router.get('/customers/delete', CustomerWebController.showCustomerToDelete);
