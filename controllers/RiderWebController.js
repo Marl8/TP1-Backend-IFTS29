@@ -1,6 +1,7 @@
 import RiderService from '../services/RiderService.js';
+import { getNextSequence } from '../models/CounterModel.js'; 
+import CustomerService from '../services/CustomerService.js'; 
 
-// ====== Muestra el menú principal de Repartidores ========== 
 const showRiderMenu = (req, res) => {
     try {
         res.render('riderViews/riderMenu', { 
@@ -12,7 +13,6 @@ const showRiderMenu = (req, res) => {
     }
 };
 
-// ============= Muestra el formulario para agregar un nuevo repartidor =============
 const showAddRiderForm = (req, res) => {
     try {
         res.render('riderViews/addRider', { 
@@ -24,33 +24,58 @@ const showAddRiderForm = (req, res) => {
     }
 };
 
-//  =========== Guarda el nuevo repartidor (desde el formulario)   =============
 const saveRiderWeb = async (req, res) => {
     try {
+        if (!/^[a-zA-Z\s]+$/.test(req.body.name)) {
+            throw new Error('El nombre solo debe contener letras y espacios.');
+        }
+        if (!/^\d+$/.test(req.body.dni)) {
+            throw new Error('El DNI solo debe contener números.');
+        }
+        if (!req.body.email.includes('@')) {
+            throw new Error('El email debe ser válido (faltó el @).');
+        }
+        if (!/^\d+$/.test(req.body.phone)) {
+            throw new Error('El teléfono solo debe contener números.');
+        }
+
         await RiderService.saveRider(req.body); 
-        res.redirect('/riders?success=true');
+        res.redirect('/riders?success=true'); 
     } catch (error) {
         const errorMessage = encodeURIComponent(error.message);
         res.redirect(`/riders/add?error=${errorMessage}`);
     }
 };
 
-// ========  Muestra la lista de todos los repartidores  =================== 
 const listRidersWeb = async (req, res) => {
     try {
-        const riders = await RiderService.findAllRiders(); 
+        let riders = []; 
+        try {
+             riders = await RiderService.findAllRiders(); 
+        } catch (findError) {
+             if (!findError.message.includes('No hay repartidores')) {
+                 throw findError; 
+             }
+        }
+       
         res.render('riderViews/listRiders', {
             title: 'Listado de Repartidores',
-            riders: riders
+            riders: riders,
+            query: req.query 
         });
     } catch (error) {
-        res.status(500).send(error.message);
+         console.error("Error al listar repartidores:", error);
+         res.status(500).render('errorView', {
+             title: "Error",
+             message: "No se pudieron cargar los repartidores: " + error.message,
+             query: req.query
+         });
     }
 };
 
-// ======== Muestra la página para EDITAR un repartidor (con buscador) ========
+
 const showRiderToEdit = async (req, res) => {
-    const id = req.query.id;
+    const id = req.query.id; 
     let rider = null;
     let error = null;
     try {
@@ -60,67 +85,86 @@ const showRiderToEdit = async (req, res) => {
     } catch (err) {
         error = err.message;
     }
-    
     res.render('riderViews/updateRider', { 
         title: 'Editar Repartidor', 
-        id: id,
-        rider: rider,
-        error: error
+        id: id,     
+        rider: rider, 
+        error: error,
+        query: req.query
     });
 };
 
-// ======== PROCESA la edición del repartidor ========
 const updateRiderWeb = async (req, res) => {
     try {
         const id = req.params.id;
+        
+        if (!/^[a-zA-Z\s]+$/.test(req.body.name)) {
+             throw new Error('El nombre solo debe contener letras y espacios.');
+        }
+        if (!/^\d+$/.test(req.body.dni)) {
+             throw new Error('El DNI solo debe contener números.');
+        }
+        if (!req.body.email.includes('@')) {
+             throw new Error('El email debe ser válido (faltó el @).');
+        }
+        if (!/^\d+$/.test(req.body.phone)) {
+             throw new Error('El teléfono solo debe contener números.');
+        }
+
         await RiderService.updateRider(id, req.body); 
         res.redirect('/riders/list');
     } catch (error) {
         res.render('riderViews/updateRider', {
             title: 'Editar Repartidor',
             error: error.message,
-            rider: { ...req.body, _id: req.params.id } 
+            rider: { ...req.body, riderId: req.params.id }, 
+            query: req.query
         });
-    } 
-}; 
-
-// ======== Muestra la página para ELIMINAR un repartidor (con buscador) ========
-const showRiderToDelete = async (req, res) => {
-    const id = req.query.id;
-    let rider = null;
-    let error = null;
-    try {
-        if (id) {
-            rider = await RiderService.findRiderById(id);
-        }
-    } catch (err) {
-        error = err.message;
     }
-
-    res.render('riderViews/deleteRider', { 
-        title: 'Eliminar Repartidor', 
-        id: id,
-        rider: rider,
-        error: error
-    }); 
 };
 
-// ======== PROCESA la eliminación del repartidor ========
+const showRiderToDelete = async (req, res) => {
+    const idToFind = req.query.id; 
+    let rider = null;
+    let error = null;
+
+    try {
+        if (!idToFind) {
+            return res.redirect('/riders'); 
+        }
+        
+        rider = await RiderService.findRiderById(idToFind);
+        
+        if (!rider) {
+            error = `Repartidor con ID ${idToFind} no encontrado.`;
+        }
+        
+        res.render('riderViews/deleteRider', { 
+            title: 'Eliminar Repartidor', 
+            rider: rider,
+            error: error,
+            query: req.query
+        });
+    } catch (err) {
+        res.render('riderViews/deleteRider', { 
+            error: err.message, 
+            rider: null,
+            query: req.query
+        });
+    }
+};
+
 const deleteRiderWeb = async (req, res) => {
     try {
         const id = req.params.id; 
         await RiderService.deleteRider(id); 
-        res.redirect('/riders/list'); 
+        res.redirect('/riders/list?success=eliminado'); 
     } catch (error) {
-        res.render('riderViews/deleteRider', {
-            title: 'Eliminar Repartidor',
-            error: error.message,
-            id: req.params.id
-        });
+        const errorMessage = encodeURIComponent(error.message);
+        res.redirect(`/riders/delete?id=${req.params.id}&error=${errorMessage}`);
     }
 };
 
-// === Exportamos TODAS las funciones  ===== 
 const RiderWebController = {
     showRiderMenu,
     showAddRiderForm,
@@ -128,8 +172,8 @@ const RiderWebController = {
     listRidersWeb,
     showRiderToEdit,
     updateRiderWeb,
-    showRiderToDelete,   
-    deleteRiderWeb     
+    showRiderToDelete,
+    deleteRiderWeb
 };
 
 export default RiderWebController;
