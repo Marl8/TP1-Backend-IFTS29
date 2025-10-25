@@ -2,63 +2,102 @@ import DeliveryOrder from "../models/DeliveryOrder.js";
 import { findData, writeData } from "../data/db.js";
 
 const EXTERNAL_PLATFORMS = ["Rappi", "PedidosYa", "Uber Eats"];
+const MODE = process.env.DATA_SOURCE || "local"; // "local" o "mongo"
 
 const DeliveryService = {
-  crearPedido(customerId, items, estado, total, repartidor, estEntrega, plataforma) {
-    const db = findData();
-
-    if (!customerId || !Array.isArray(items) || items.length === 0 || !estado || !plataforma) {
-      throw new Error("Datos incompletos. Se requieren: Cliente, Ítems, Estado y Plataforma.");
+  /**
+   * Crear un pedido (local o mongo)
+   */
+  async crearPedido(customerId, items, estado, total, repartidor, estEntrega, plataforma) {
+    if (!customerId || !Array.isArray(items) || items.length === 0 || !plataforma) {
+      throw new Error("Datos incompletos. Se requieren: Cliente, Ítems y Plataforma.");
     }
 
-    const menuItems = db.MenuItem;
-    let calculatedTotal = 0;
-    const itemsConDatos = [];
-
-    for (let pedidoItem of items) {
-      const itemIDFromForm = String(pedidoItem.id); 
-      const menuItem = menuItems.find(mi => String(mi.id) === itemIDFromForm);
-        
-      if (!menuItem) {
-        throw new Error(`Item con id ${pedidoItem.id} no existe`);
-      }
-      if (menuItem.stock < pedidoItem.quantity) {
-        throw new Error(`Stock insuficiente para ${menuItem.name}`);
-      }
-
-      menuItem.stock -= pedidoItem.quantity;
-      calculatedTotal += menuItem.price * pedidoItem.quantity;
-
-      itemsConDatos.push({
-        id: menuItem.id,
-        name: menuItem.name,
-        price: menuItem.price,
-        quantity: pedidoItem.quantity
+    if (MODE === "mongo") {
+      // ====== 💾 VERSIÓN MONGO ======
+      const delivery = new DeliveryOrder({
+        customerId,
+        items: items.map(i => i.id),
+        status: estado || "preparing",
+        total: total || 0,
+        assignedRiderId: repartidor || null,
+        estimatedTime: estEntrega ? new Date(Date.now() + estEntrega * 60000) : null,
+        plataforma: plataforma || "Propia",
       });
-    }
 
-    const finalTotal = total ? parseFloat(total) : calculatedTotal; 
+      await delivery.save();
+      return delivery;
+    } else {
+      // ====== 📁 VERSIÓN LOCAL ======
+      console.log("🟢 MODO LOCAL activo (guardando en data/data.json)");//borrar
+      const db = findData();
+      console.log("📦 Contenido actual del archivo:", db.deliveryOrder?.length || 0, "pedidos existentes");//borrar
+      const menuItems = db.MenuItem;
+      let calculatedTotal = 0;
+      const itemsConDatos = [];
 
-    const nuevoPedido = new DeliveryOrder({ 
-        id: Date.now(), 
-        customerId: customerId,
+      for (let pedidoItem of items) {
+        const menuItem = menuItems.find(mi => String(mi.id) === String(pedidoItem.id));
+        if (!menuItem) {
+          console.error("❌ Item no encontrado en el menú:", pedidoItem.id);//borrar
+          throw new Error(`Item con id ${pedidoItem.id} no existe`);
+        }
+        if (menuItem.stock < pedidoItem.quantity){
+          console.error(`⚠️ Stock insuficiente para ${menuItem.name} (stock: ${menuItem.stock}, pedido: ${pedidoItem.quantity})`);//borrar
+          throw new Error(`Stock insuficiente para ${menuItem.name}`);
+        }
+          
+
+        menuItem.stock -= pedidoItem.quantity;
+        calculatedTotal += menuItem.price * pedidoItem.quantity;
+
+        itemsConDatos.push({
+          id: menuItem.id,
+          name: menuItem.name,
+          price: menuItem.price,
+          quantity: pedidoItem.quantity,
+        });
+      }
+
+      const finalTotal = total ? parseFloat(total) : calculatedTotal;
+
+      const nuevoPedido = {
+        id: Date.now(),
+        customerId,
         total: finalTotal,
-        status: estado, 
-        plataforma: plataforma,
+        status: estado || "preparing",
+        plataforma: plataforma || "Propia",
         items: itemsConDatos,
         assignedRiderId: repartidor || null,
-        estimatedDelivery: estEntrega || null
-    });
+        estimatedTime: estEntrega || null,
+      };
 
-    db.deliveryOrder.push(nuevoPedido);
-    writeData(db);
+      console.log("🧾 Nuevo pedido a guardar:", JSON.stringify(nuevoPedido, null, 2));
+      
+      if (!Array.isArray(db.deliveryOrder)) {
+        console.warn("⚠️ db.deliveryOrder no existe o no es array. Creando uno nuevo.");
+        db.deliveryOrder = [];
+      }
 
-    return nuevoPedido;
+      db.deliveryOrder.push(nuevoPedido);
+      console.log("📥 Pedido agregado a memoria. Total actual:", db.deliveryOrder.length);//borrar
+
+      try {
+        writeData(db);
+        console.log("💾 Archivo data.json actualizado correctamente.");
+      } catch (err) {
+        console.error("❌ Error al escribir en data.json:", err);
+      }
+
+      console.log("✅ Pedido guardado correctamente con ID:", nuevoPedido.id);
+      return nuevoPedido;
+      }
   },
 
-  crearPedidoExterno(customerId, items, plataforma) {
-    const db = findData();
-
+  /**
+   * Crear pedido externo (PedidosYa, Rappi, UberEats)
+   */
+  async crearPedidoExterno(customerId, items, plataforma) {
     if (!customerId || !Array.isArray(items) || items.length === 0 || !plataforma) {
       throw new Error("Datos incompletos");
     }
@@ -67,150 +106,151 @@ const DeliveryService = {
       throw new Error(`Plataforma inválida. Debe ser: ${EXTERNAL_PLATFORMS.join(", ")}`);
     }
 
-    const customer = db.customer.find(c => c.id === customerId || c._id === customerId);
-    
-    if (!customer) {
-      throw new Error(`Cliente con id ${customerId} no existe`);
-    }
-    
-    const menuItems = db.MenuItem;
-    let total = 0;
-    const itemsConDatos = [];
-
-    for (let pedidoItem of items) {
-      const itemIDFromForm = String(pedidoItem.id); 
-      const menuItem = menuItems.find(mi => String(mi.id) === itemIDFromForm);
-        
-      if (!menuItem) {
-        throw new Error(`Item con id ${pedidoItem.id} no existe`);
-      }
-      if (menuItem.stock < pedidoItem.quantity) {
-        throw new Error(`Stock insuficiente para ${menuItem.name}`);
-      }
-
-      menuItem.stock -= pedidoItem.quantity;
-      total += menuItem.price * pedidoItem.quantity;
-
-      itemsConDatos.push({
-        id: menuItem.id,
-        name: menuItem.name,
-        price: menuItem.price,
-        quantity: pedidoItem.quantity
-      });
-    }
-
-    const nuevoPedido = new DeliveryOrder({
-        id: Date.now(), 
-        customerId: customerId,
-        total: total,
+    if (MODE === "mongo") {
+      const delivery = new DeliveryOrder({
+        customerId,
+        items: items.map(i => i.id),
         status: "pending",
-        plataforma: plataforma,
-        items: itemsConDatos
-    });
+        total: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+        plataforma,
+      });
+      await delivery.save();
+      return delivery;
+    } else {
+      const db = findData();
+      const customer = db.customer.find(c => c.id === customerId || c._id === customerId);
+      if (!customer) throw new Error(`Cliente con id ${customerId} no existe`);
 
-    db.externalOrders.push(nuevoPedido);
-    writeData(db);
+      const menuItems = db.MenuItem;
+      let total = 0;
+      const itemsConDatos = [];
 
-    return nuevoPedido;
-  },
+      for (let pedidoItem of items) {
+        const item = menuItems.find(mi => String(mi.id) === String(pedidoItem.id));
+        if (!item) throw new Error(`Item con id ${pedidoItem.id} no existe`);
+        if (item.stock < pedidoItem.quantity)
+          throw new Error(`Stock insuficiente para ${item.name}`);
 
-  listarPedidos(plataforma) {
-    const db = findData();
-    let pedidos = db.deliveryOrder || [];
+        item.stock -= pedidoItem.quantity;
+        total += item.price * pedidoItem.quantity;
 
-    if (plataforma) {
-      pedidos = pedidos.filter(
-        p => p.plataforma && p.plataforma.toLowerCase() === plataforma.toLowerCase()
-      );
+        itemsConDatos.push({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: pedidoItem.quantity,
+        });
+      }
+
+      const nuevoPedido = {
+        id: Date.now(),
+        customerId,
+        total,
+        status: "pending",
+        plataforma,
+        items: itemsConDatos,
+      };
+
+      db.externalOrders.push(nuevoPedido);
+      writeData(db);
+      return nuevoPedido;
     }
-
-    return pedidos;
   },
 
-  listarPedidosExternos() {
-    const db = findData();
-    return (db.externalOrders || []).filter(p => p.status === "pending");
-  },
-
-  confirmarPedidoExterno(id) {
-    const db = findData();
-
-    const pedidoExterno = db.externalOrders.find(p => p.id.toString() === id.toString());
-    if (!pedidoExterno) {
-      throw new Error("Pedido externo no encontrado");
+  /**
+   * Listar pedidos
+   */
+  async listarPedidos(plataforma) {
+    if (MODE === "mongo") {
+      const filter = plataforma ? { plataforma } : {};
+      return await DeliveryOrder.find(filter)
+        .populate("customerId")
+        .populate("items")
+        .populate("assignedRiderId");
+    } else {
+      const db = findData();
+      let pedidos = db.deliveryOrder || [];
+      if (plataforma) {
+        pedidos = pedidos.filter(
+          p => p.plataforma && p.plataforma.toLowerCase() === plataforma.toLowerCase()
+        );
+      }
+      return pedidos;
     }
-
-    if (pedidoExterno.status !== "pending") {
-      throw new Error("Pedido ya confirmado o procesado");
-    }
-
-    pedidoExterno.status = "preparing";
-    const nuevoPedido = new DeliveryOrder(
-      pedidoExterno.id,
-      pedidoExterno.customerId,
-      pedidoExterno.total,
-      "preparing",
-      pedidoExterno.plataforma
-    );
-    nuevoPedido.setItems(pedidoExterno.items);
-
-    db.deliveryOrder.push(nuevoPedido);
-    db.externalOrders = db.externalOrders.filter(p => p.id.toString() !== id.toString());
-    writeData(db);
-
-    return nuevoPedido;
   },
 
-  despacharPedido(id) {
-    const db = findData();
-    const pedido = db.deliveryOrder.find(p => p.id.toString() === id.toString());
-
-    if (!pedido) {
-      throw new Error("Pedido no encontrado");
+  /**
+   * Listar pedidos externos pendientes
+   */
+  async listarPedidosExternos() {
+    if (MODE === "mongo") {
+      return await DeliveryOrder.find({ status: "pending", plataforma: { $ne: "Propia" } });
+    } else {
+      const db = findData();
+      return (db.externalOrders || []).filter(p => p.status === "pending");
     }
-
-    pedido.status = "dispatched";
-    writeData(db);
-
-    return pedido;
   },
 
-  eliminarPedido(id) {
-    const db = findData();
-    const initialLength = db.deliveryOrder.length;
+  /**
+   * Confirmar pedido externo
+   */
+  async confirmarPedidoExterno(id) {
+    if (MODE === "mongo") {
+      const pedido = await DeliveryOrder.findById(id);
+      if (!pedido) throw new Error("Pedido externo no encontrado");
+      pedido.status = "preparing";
+      await pedido.save();
+      return pedido;
+    } else {
+      const db = findData();
+      const pedidoExterno = db.externalOrders.find(p => String(p.id) === String(id));
+      if (!pedidoExterno) throw new Error("Pedido externo no encontrado");
+      pedidoExterno.status = "preparing";
+      db.deliveryOrder.push(pedidoExterno);
+      db.externalOrders = db.externalOrders.filter(p => String(p.id) !== String(id));
+      writeData(db);
+      return pedidoExterno;
+    }
+  },
 
-    db.deliveryOrder = db.deliveryOrder.filter(p => String(p.id) !== String(id));
+  /**
+   * Despachar pedido (cambia estado)
+   */
+  async despacharPedido(id) {
+    if (MODE === "mongo") {
+      const pedido = await DeliveryOrder.findById(id);
+      if (!pedido) throw new Error("Pedido no encontrado");
+      pedido.status = "dispatched";
+      await pedido.save();
+      return pedido;
+    } else {
+      const db = findData();
+      const pedido = db.deliveryOrder.find(p => String(p.id) === String(id));
+      if (!pedido) throw new Error("Pedido no encontrado");
+      pedido.status = "dispatched";
+      writeData(db);
+      return pedido;
+    }
+  },
 
-    if (db.deliveryOrder.length === initialLength) {
+  /**
+   * Eliminar pedido
+   */
+  async eliminarPedido(id) {
+    if (MODE === "mongo") {
+      await DeliveryOrder.findByIdAndDelete(id);
+      return true;
+    } else {
+      const db = findData();
+      const initialLength = db.deliveryOrder.length;
+      db.deliveryOrder = db.deliveryOrder.filter(p => String(p.id) !== String(id));
+      if (db.deliveryOrder.length === initialLength) {
         throw new Error("Pedido no encontrado para eliminar");
+      }
+      writeData(db);
+      return true;
     }
-
-    writeData(db);
-    return true;
   },
-
-  filtrarPorPlataforma(plataforma) {
-    const db = findData();
-
-    if (!plataforma) {
-      throw new Error("Debe indicar la plataforma");
-    }
-
-    let pedidos = (db.deliveryOrder || []).filter(
-      p => p.plataforma && p.plataforma.toLowerCase() === plataforma.toLowerCase()
-    );
-
-    if (EXTERNAL_PLATFORMS.includes(plataforma)) {
-      const externosPendientes = (db.externalOrders || []).filter(
-        p =>
-          p.plataforma.toLowerCase() === plataforma.toLowerCase() &&
-          p.status.toLowerCase() === "pending"
-      );
-      pedidos = pedidos.concat(externosPendientes);
-    }
-
-    return pedidos;
-  }
 };
 
 export default DeliveryService;

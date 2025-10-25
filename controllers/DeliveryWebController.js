@@ -1,6 +1,7 @@
 import DeliveryService from "../services/DeliveryService.js";
 import CustomerService from '../services/CustomerService.js'; 
 import RiderService from "../services/RiderService.js"; 
+import { findData, writeData } from "../data/db.js";
 
 const showDeliveryMenu = (req, res) => {
     try {
@@ -17,7 +18,6 @@ const showAddForm = async (req, res) => {
     const { customerId } = req.query; 
     let customer = null;
     let error = null;
-    let riders = []; 
 
     try {
         if (customerId) {
@@ -27,18 +27,15 @@ const showAddForm = async (req, res) => {
             }
         }
         
-        try {
-            riders = await RiderService.findAllRiders();
-        } catch (rError) {
-            console.warn("No se pudieron cargar repartidores: " + rError.message);
-        }
+        const { riders, message: ridersMessage } = await RiderService.findAllRiders();
 
         res.render("deliveryViews/addDelivery", { 
             title: "Agregar Pedido",
             query: req.query,
             customer: customer,   
             error: error,
-            riders: riders
+            riders,
+            ridersMessage,
         });
 
     } catch(err) {
@@ -51,10 +48,55 @@ const showAddForm = async (req, res) => {
     }
 };
 
+const findCustomerByDni = async (req, res) => {
+  const { dni } = req.body;
+  const db = findData();
+
+  try {
+    if (!dni || dni.trim() === "") {
+      throw new Error("Debe ingresar un DNI válido para buscar al cliente.");
+    }
+
+    const customer = await CustomerService.findCustomerByDni(dni);
+
+    if (!customer) {
+      return res.render("deliveryViews/addDelivery", {
+        title: "Agregar Pedido",
+        error: `No se encontró ningún cliente con el DNI ${dni}.`,
+        customer: null,
+        customerId: null,
+        menuItems: db.MenuItem,
+        oldData: { dni }
+      });
+    }
+
+    // Si encontró cliente
+    res.render("deliveryViews/addDelivery", {
+      title: "Agregar Pedido",
+      customer,
+      customerId: customer._id || customer.id,
+      menuItems: db.MenuItem,
+      error: null,
+      oldData: { dni }
+    });
+
+  } catch (err) {
+    console.error("Error al buscar cliente:", err);
+    res.render("deliveryViews/addDelivery", {
+      title: "Agregar Pedido",
+      customer: null,
+      customerId: null,
+      menuItems: db.MenuItem,
+      error: err.message || "Ocurrió un error al buscar el cliente.",
+      oldData: { dni }
+    });
+  }
+};
+
 
 const listDeliveriesWeb = async (req, res) => {
     try {
-        const rawDeliveries = DeliveryService.listarPedidos(); 
+        const rawDeliveries = await DeliveryService.listarPedidos(); 
         
         const deliveries = await Promise.all(rawDeliveries.map(async (delivery) => {
             try {
@@ -102,26 +144,29 @@ const saveDeliveryWeb = async (req, res) => {
 
         let itemsArray = [];
         if (typeof items === 'string' && items.trim() !== '') {
-            itemsArray = items.split(',').map(item => {
-                const parts = item.trim().split(':'); 
-                if (parts.length === 2) {
-                    return {
-                        id: parseInt(parts[0].trim()), 
-                        quantity: parseInt(parts[1].trim()) || 1 
-                    };
-                }
-                return {
-                    id: parseInt(parts[0].trim()), 
-                    quantity: 1
-                };
-            }).filter(item => item.id && item.quantity > 0);
+            try {
+                itemsArray = JSON.parse(items);
+            } catch (err) {
+                console.error("❌ Error al parsear items:", err);
+                throw new Error("Error en el formato de los ítems del pedido.");
+            }
         }
 
         if (!customerId || itemsArray.length === 0) {
             throw new Error("Datos incompletos. Asegúrese de ingresar el ID del cliente y al menos un ítem.");
         }
+
+        const riderId = repartidor && repartidor.trim() !== '' ? repartidor : null;
+
+        //Borrar cuándo todo esté ok
+        console.log("🟢 Guardando nuevo pedido...");
+        console.log("Cliente:", verifiedCustomer._id || verifiedCustomer.id);
+        console.log("Items:", itemsArray);
+        console.log("Estado:", estado);
+        console.log("Plataforma:", plataforma);
+
         
-        DeliveryService.crearPedido(verifiedCustomer._id, itemsArray, estado, total, repartidor, estEntrega, plataforma); 
+        await DeliveryService.crearPedido(verifiedCustomer._id, itemsArray, estado, total, riderId, estEntrega, plataforma); 
 
         res.redirect("/delivery/list?success=Pedido creado con éxito"); 
 
@@ -220,9 +265,11 @@ const deleteDeliveryWeb = (req, res) => {
 };
 
 
+
 const DeliveryWebController = {
     showDeliveryMenu,
     showAddForm,
+    findCustomerByDni,
     listDeliveriesWeb,
     saveDeliveryWeb,
     showDeliveryToEdit,
