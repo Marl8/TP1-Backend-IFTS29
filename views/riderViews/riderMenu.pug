@@ -1,4 +1,4 @@
-extends ../layout
+extends ../layout 
 
 block content
   h2.mb-5.text-center Gestión de Repartidores
@@ -18,5 +18,5 @@ block content
   .d-flex.flex-column.align-items-center.g-3
     a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/add") ➕ Agregar Repartidor
     a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/list") 📋 Listar Repartidores
-    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/update") ✏️ Editar Repartidor
-    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/delete") 🗑 Eliminar Repartidor
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/list?action=edit") ✏️ Editar Repartidor
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/riders/list?action=delete") 🗑 Eliminar Repartidor
