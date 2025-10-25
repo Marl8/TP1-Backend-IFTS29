@@ -2,63 +2,72 @@ extends ../layout
 
 block content 
     h2.mb-4 Agregar Pedido
-
     a.btn.btn-secondary.mb-3.ms-2(href="/delivery") ← Volver al menú
 
-    
-    if query.error
-        .alert.alert-danger
-            | Error al Guardar Pedido: !{decodeURIComponent(query.error)}
-            
-    
     if error 
-        .alert.alert-danger
-            | Error de Búsqueda: #{error}
-
+        script. 
+            alert('Error: !{error}')
     
-    form(method="get" action="/delivery/add")
-        .mb-3.d-flex.flex-column
-            label.form-label(for="customerId") Buscar Cliente por ID o DNI
-            input.form-control(
-                type="text",
-                name="customerId",
-                id="customerId",
-                placeholder="Ingrese ID o DNI del cliente",
-                autocomplete="off",
-                required,
-                value=query.customerId || '' 
-            )
-            button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
-
-    hr
-
-    
-    if customer 
-        h3.mb-3 Cliente Encontrado
-        .alert.alert-success
-            p #[strong Nombre:] #{customer.name}
-            p #[strong Teléfono:] #{customer.phone}
-            p #[strong Dirección:] #{customer.address}
-
-        
-        form(method="post" action="/delivery/save")
-            
-            input(type="hidden", name="customerId", value=customer._id) 
-            
-            
-
-            
-            .mb-3
-                label.form-label(for="items") Ítems del Pedido #[strong (ID de Producto:Cantidad)]
-                textarea.form-control(
-                    name="items",
-                    id="items",
-                    rows="3",
-                    placeholder="Escriba los ítems en formato ID:Cantidad, separados por coma (Ej: 101:2, 105:1)",
-                    required
+    form(method="POST" action="/delivery/add/findCustomer" class="mb-4")
+        .mb-3
+            label.form-label(for="dni") Buscar Cliente por DNI
+            .input-group
+                input.form-control(
+                    type="text",
+                    name="dni",
+                    id="dni",
+                    placeholder="Ingrese DNI del cliente",
+                    autocomplete="off",
+                    required,
+                    value=(oldData && oldData.dni ? oldData.dni : '')
                 )
+                button.btn.btn-primary(type="submit") Buscar
 
-            
+    if customer && customerId
+        .card.mb-4
+            .card-body
+                h5.card-title Cliente Seleccionado
+                p.mb-1
+                    | Nombre:
+                    strong #{customer.name}
+                p.mb-1 DNI: #{customer.dni}
+                p.mb-0 Teléfono: #{customer.phone}
+
+        form#deliveryForm(method="post" action="/delivery/save")
+            input(type="hidden", name="customerId", id="customerId", value=customerId)
+
+            // Ítems del pedido
+            .mb-3
+                label.form-label(for="itemSelect") Ítems del Pedido
+                .input-group
+                    select.form-select#itemSelect
+                        option(value="" selected disabled) -- Seleccione un producto --
+                        each it in menuItems
+                            if it.stock > 0
+                                option(value=it.id data-price=it.price data-stock=it.stock)= `${it.name} - $${it.price} (Stock: ${it.stock})`
+                            else
+                                option(value=it.id data-price=it.price data-stock=it.stock disabled style="color:#999;")= `${it.name} - $${it.price} (Sin stock)`
+                    input.form-control#quantity(type="number", min="1", value="1", required, style="max-width:100px;")
+                    button.btn.btn-outline-primary#btnAgregar(type="button") Agregar
+
+            table.table.table-striped.mt-3
+                thead.table-light
+                    tr
+                        th Producto
+                        th Precio
+                        th Cantidad
+                        th Subtotal
+                        th.text-center Acciones
+                tbody#itemsTable
+                tfoot
+                    tr
+                        td(colspan="3", class="text-end fw-bold") Total:
+                        td#totalCell.fw-bold 0
+                        td
+
+            input#itemsJson(type="hidden", name="items")
+
+            // Campos adicionales
             .mb-3
                 label.form-label(for="estado") Estado
                 select.form-select(name="estado", id="estado", required)
@@ -66,22 +75,23 @@ block content
                     option(value="dispatched") Despachado
                     option(value="delivered") Entregado
 
-            
             .mb-3
-                label.form-label(for="total") Total ($)
-                input.form-control(type="number", name="total", id="total", placeholder="Campo opcional/calculado")
-
-            
-            .mb-3
-                label.form-label(for="repartidor") ID Repartidor Asignado
-                input.form-control(type="text", name="repartidor", id="repartidor", placeholder="Ej: 1 (ID Corto del Repartidor)")
-
-            
+                label.form-label(for="repartidor") Repartidor (opcional)
+                if riders && riders.length
+                    select.form-select(name="repartidor" id="repartidor")
+                        option(value="") -- Sin repartidor asignado --
+                        each r in riders
+                            option(value=r._id || r.id)= `${r.name} (${r.dni || ''})`
+                else
+                    input.form-control(type="text" disabled placeholder="Sin repartidores registrados")
+                    if ridersMessage
+                        .alert.alert-warning.mt-2(role="alert")
+                            i.bi.bi-exclamation-triangle-fill.me-2
+                               #{ridersMessage}
             .mb-3
                 label.form-label(for="estEntrega") Estimado de Entrega (Minutos)
                 input.form-control(type="number", name="estEntrega", id="estEntrega", placeholder="Ej: 30")
 
-            
             .mb-3
                 label.form-label(for="plataforma") Plataforma
                 select.form-select(name="plataforma", id="plataforma", required)
@@ -90,10 +100,91 @@ block content
                     option(value="PedidosYa") PedidosYa
                     option(value="Uber Eats") Uber Eats
 
-
-            
-            button.btn.btn-success(type="submit") Guardar Pedido
+            button.btn.btn-success(type="submit") Guardar
             a.btn.btn-secondary.ms-2(href="/delivery") Cancelar
-            
-    else if query.customerId
-        .alert.alert-warning No se encontró el cliente. Por favor, revise el ID/DNI.
+
+    script.
+        (function(){
+            const form = document.getElementById('deliveryForm');
+            if(!form) return;
+
+            const itemSelect = document.getElementById('itemSelect');
+            const quantity = document.getElementById('quantity');
+            const btnAgregar = document.getElementById('btnAgregar');
+            const itemsTable = document.getElementById('itemsTable');
+            const totalCell = document.getElementById('totalCell');
+            const itemsJson = document.getElementById('itemsJson');
+
+            const items = [];
+            const itemsUi = [];
+
+            function renderTable(){
+                itemsTable.innerHTML = '';
+                let total = 0;
+
+                itemsUi.forEach((it, idx) => {
+                    const subtotal = it.price * it.quantity;
+                    total += subtotal;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${it.name}</td>
+                        <td>$${it.price}</td>
+                        <td>${it.quantity}</td>
+                        <td>$${subtotal}</td>
+                        <td class="text-center">
+                            <button type="button" data-idx="${idx}" class="btn btn-sm btn-danger">Quitar</button>
+                        </td>
+                    `;
+                    itemsTable.appendChild(tr);
+                });
+
+                totalCell.textContent = total;
+
+                itemsTable.querySelectorAll('button.btn-danger').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const idx = Number(e.currentTarget.getAttribute('data-idx'));
+                        items.splice(idx, 1);
+                        itemsUi.splice(idx, 1);
+                        renderTable();
+                    });
+                });
+            }
+
+            btnAgregar.addEventListener('click', () => {
+                const id = itemSelect.value;
+                const qty = Number(quantity.value || 0);
+                if(!id || qty <= 0) return;
+
+                const opt = itemSelect.options[itemSelect.selectedIndex];
+                const name = opt.textContent.split(' - $')[0];
+                const price = Number(opt.getAttribute('data-price') || 0);
+                const stock = Number(opt.getAttribute('data-stock') || 0);
+
+                const existingIdx = items.findIndex(i => i.id == id);
+                const currentQty = existingIdx >= 0 ? items[existingIdx].quantity : 0;
+
+                if(stock && currentQty + qty > stock){
+                    alert(`Stock insuficiente. Disponible: ${stock - currentQty}`);
+                    return;
+                }
+
+                if(existingIdx >= 0){
+                    items[existingIdx].quantity += qty;
+                    itemsUi[existingIdx].quantity += qty;
+                } else {
+                    items.push({ id, quantity: qty });
+                    itemsUi.push({ id, name, price, quantity: qty });
+                }
+
+                renderTable();
+            });
+
+            form.addEventListener('submit', (e) => {
+                if(items.length === 0){
+                    e.preventDefault();
+                    alert('Debes agregar al menos un ítem.');
+                    return;
+                }
+                itemsJson.value = JSON.stringify(items);
+            });
+        })();
