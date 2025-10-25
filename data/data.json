@@ -19,14 +19,14 @@
       "name": "ensalada mixta",
       "price": 3000,
       "category": "minuta",
-      "stock": 34
+      "stock": 33
     },
     {
       "id": 4,
       "name": "papas fritas",
       "price": 3500,
       "category": "minuta",
-      "stock": 50
+      "stock": 49
     },
     {
       "id": 5,
@@ -186,6 +186,40 @@
           "id": 2,
           "name": "hamburguesa",
           "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761402129135,
+      "customerId": "68f8d07df12d0ff5f94ac0ea",
+      "total": 3000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761403017974,
+      "customerId": "68f8d07df12d0ff5f94ac0ea",
+      "total": 3500,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 4,
+          "name": "papas fritas",
+          "price": 3500,
           "quantity": 1
         }
       ],
