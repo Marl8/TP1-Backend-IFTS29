@@ -3,7 +3,7 @@ import Supply from '../models/Supply.js';
 
 // Guardar un suministro 
 
-const saveSupply = async({name, category, unitPrice, stock, menuItemId})=>{
+const saveSupply = async({name, category, unitPrice, stock})=>{
     try {
         if (!name || !unitPrice || !category || !stock) {
         throw new Error('Datos incompletos. Se requieren: name, unitPrice, category, stock');
@@ -13,7 +13,7 @@ const saveSupply = async({name, category, unitPrice, stock, menuItemId})=>{
         if(found){
             throw new Error('Ya existe un item con este id');
         }
-        const supply = new Supply({name, category, unitPrice, stock, menuItemId});
+        const supply = new Supply({name, category, unitPrice, stock});
         const saveSupply = await supply.save();
         return saveSupply;
     } catch (error) {

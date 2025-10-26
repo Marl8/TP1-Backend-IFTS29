@@ -41,9 +41,6 @@ const saveMenuItem = async({name, price, category, stock, supplies})=>{
                 { $addToSet: { menuItems: saveItem._id } }
             );
         }
-        // Reemplazamos los IDs de los supplies en el MenuItem por los documentos completos para poder actualizar los stocks.
-        await saveItem.populate('supplies'); 
-        updateStockSupplies(saveItem._id);
         return saveItem;
     } catch (error) {
         throw new Error(error.message);
@@ -76,6 +73,7 @@ const updateMenuItem = async (id, {name, price, category, stock, supplies})=>{
 
 const updateStockSupplies = async (id) => {
     try {
+        // Reemplazamos los IDs de los supplies en el MenuItem por los documentos completos para poder actualizar los stocks.
         const itemData = await MenuItem.findById(id).populate('supplies');
         if (!itemData) {
             return {error:'Item no encontrado'};
@@ -100,6 +98,14 @@ const updateStockItem = async (id, stock) => {
         const itemData = await MenuItem.findById(id).populate('supplies');
         if (!itemData) {
             return {error:'Item no encontrado'};
+        }
+        if(stock > itemData.stock){
+            for(let supply of itemData.supplies){
+                if(supply.stock >= 0 || supply.stock ){
+                    throw new Error('Insumos insuficientes.')
+                }
+            }
+            updateStockSupplies(saveItem._id);
         }
         itemData.stock = stock;
         await itemData.save();
