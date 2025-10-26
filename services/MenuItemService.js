@@ -31,7 +31,7 @@ const saveMenuItem = async({name, price, category, stock, supplies})=>{
         }
         const {invalidSupplies, validSupplies} = await suppliesValidator(supplies);
         if (invalidSupplies.length > 0) {
-            throw new Error(`Algunos suministros no existen en la base de datos: ${invalidSupplies.join(', ')}`);
+            throw new Error(`Algunos suministros no existen en la base de datos o no tienen stock suficiente: ${invalidSupplies.join(', ')}`);
         }
         const item = new MenuItem({name, price, category, stock, supplies: validSupplies});
         const saveItem = await item.save();
@@ -131,7 +131,7 @@ async function suppliesValidator(supplies){
     for (let supplyId of supplies) {
         const supply = await Supply.findById(supplyId.trim()); 
         
-        if (supply) {
+        if (supply && supply.stock > 0) {
             validSupplies.push(supply._id);
         } else {
             invalidSupplies.push(supplyId);
