@@ -207,70 +207,6 @@ const saveDeliveryWeb = async (req, res) => {
 };
 
 
-/*
-const showDeliveryToEdit = (req, res) => {
-    try {
-        const idToFind = req.query.id;
-        let delivery = null;
-
-        if (idToFind) {
-            delivery = DeliveryService.listarPedidos().find(
-                d => String(d.id) === String(idToFind)
-            );
-        }
-
-        res.render("deliveryViews/updateDelivery", { delivery, query: req.query }); 
-    } catch (error) {
-        res.render("deliveryViews/updateDelivery", { error: error.message, query: req.query }); 
-    }
-};
-
-
-const updateDeliveryWeb = (req, res) => {
-    try {
-        DeliveryService.despacharPedido(req.params.id);
-        res.redirect("/delivery/list?success=true"); 
-
-    } catch (error) {
-        res.render("deliveryViews/updateDelivery", {
-            title: "Editar Pedido",
-            error: error.message,
-            delivery: req.body,
-            query: req.query 
-        });
-    }
-};*/
-/*
-// Mostrar formulario de edición
-const showDeliveryToEdit = async (req, res) => {
-  const idToFind = req.query.id;
-  try {
-    const delivery = await DeliveryOrder.findById(idToFind)
-      .populate('customerId')
-      .populate('assignedRiderId')
-      .lean();
-
-    if (!delivery) {
-      return res.render("deliveryViews/updateDelivery", {
-        error: `No se encontró el pedido con ID ${idToFind}.`,
-        query: { id: idToFind }
-      });
-    }
-
-    res.render("deliveryViews/updateDelivery", {
-      delivery,
-      query: { id: idToFind }
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.render("deliveryViews/updateDelivery", {
-      error: err.message,
-      query: { id: idToFind }
-    });
-  }
-};*/
-
 
 const showDeliveryToEdit = async (req, res) => {
     try {
@@ -359,10 +295,6 @@ const updateDeliveryWeb = async (req, res) => {
     });
   }
 };
-
-
-
-
 
 
 
