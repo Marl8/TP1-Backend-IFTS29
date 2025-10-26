@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+  h2.mb-4 Agregar Insumos
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/supplies") ← Volver al menú
+
+  if query.error
+    .alert.alert-danger
+      | Error: !{decodeURIComponent(query.error)}
+
+  form(method="post", action="/supplies/save")
+    .mb-3
+      label.form-label(for="name") Nombre del insumo
+      input.form-control(type="text", name="name", id="name", required,
+        pattern="[a-zA-Z\\s]+",
+        title="El nombre solo debe contener letras y espacios")
+
+    .mb-3
+      label.form-label(for="category") Categoría
+      input.form-control(type="text", name="category", id="category", required,
+        pattern="[a-zA-Z\\s]+",
+        title="La categoría solo debe contener letras y espacios")
+
+    .mb-3
+      label.form-label(for="unitPrice") Precio unitario
+      input.form-control(type="number", step="0.01", min="0", name="unitPrice", id="unitPrice", required,
+        title="Ingrese un valor numérico válido")
+
+    .mb-3
+      label.form-label(for="stock") Stock disponible
+      input.form-control(type="number", min="0", name="stock", id="stock", required,
+        title="Ingrese la cantidad disponible del insumo")
+
+    //- Campo opcional para vincular insumos con ítems de menú
+    .mb-3
+      label.form-label(for="menuItems") Asociar a ítem(s) del menú (opcional)
+      input.form-control(type="text", name="menuItems", id="menuItems",
+        placeholder="Ingrese los IDs de los ítems separados por comas")
+
+    button.btn.btn-success(type="submit") Guardar
+    a.btn.btn-secondary.ms-2(href="/supplies") Cancelar
