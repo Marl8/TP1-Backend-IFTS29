@@ -31,14 +31,14 @@ lblock content
 
             if query.action !== 'edit' && query.action !== 'delete'
               td
-                a.btn.btn-sm.btn-dark(href=`/supplys/update?id=${supply._id}`) ✏️
+                a.btn.btn-sm.btn-dark(href=`/supplieys/update?id=${supply._id}`) ✏️
                 form(action=`/supplys/delete/${supply._id}?_method=DELETE`, method="POST", style="display:inline")
                   button.btn.btn-sm.btn-danger.ms-2(type="submit") 🗑️
             else if query.action === 'edit'
               td
-                a.btn.btn-sm.btn-primary(href=`/supplys/update?id=${supply._id}`) Editar este insumo
+                a.btn.btn-sm.btn-primary(href=`/supplies/update?id=${supply._id}`) Editar este insumo
             else if query.action === 'delete'
               td
-                a.btn.btn-sm.btn-danger(href=`/supplys/delete?id=${supply._id}`) Eliminar este insumo
+                a.btn.btn-sm.btn-danger(href=`/supplies/delete?id=${supply._id}`) Eliminar este insumo
   else
     p.text-muted No hay insumos registrados aún.

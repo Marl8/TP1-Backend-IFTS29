@@ -30,10 +30,10 @@ block content
           td #{supply.unitPrice}
 
     // Botones de acción fuera de la tabla
-    form(action=`/supplys/delete/${supply.id}?_method=DELETE`, method="POST", style="display:inline")
+    form(action=`/supplies/delete/${supply.id}?_method=DELETE`, method="POST", style="display:inline")
       button.btn.btn-danger.mt-3(type="submit") 🗑️ Eliminar
 
-    a.btn.btn-secondary.mt-3.ms-2(href="/supplys/delete") Cancelar
+    a.btn.btn-secondary.mt-3.ms-2(href="/supplies/delete") Cancelar
 
   // Mensaje de error si no se encuentra el insumo
   if error

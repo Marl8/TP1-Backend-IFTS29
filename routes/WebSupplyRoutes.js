@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/", SupplyWebController.showSupplyMenu); 
 router.get("/add", SupplyWebController.showAddSupplyForm);
-router.get("/list", SupplyWebController.listSupplysWeb);
+router.get("/list", SupplyWebController.listSuppliesWeb);
 router.get("/delete", SupplyWebController.showSupplyToDelete);
 /*router.get("/update", DeliveryWebController.showDeliveryToEdit); 
 
