@@ -6,16 +6,16 @@ block content
     a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
 
     form(method="get" action="/customers/update")
-      .mb-3.d-flex.flex-column
+        .mb-3.d-flex.flex-column
         label.form-label(for="id") Ingresa el ID del cliente a editar
-        input.form-control(type="number", name="id", id="id", required value=id)
+        input.form-control(type="text", name="id", id="id", required value=id)
 
         button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
     
     // Formulario de edición, solo si customer está definido
     if customer
         hr
-        form(method="post" action=`/customers/update/${customer.id}`)
+        form(method="post" action=`/customers/update/${customer._id}`)
             .mb-3
                 label.form-label(for="name") Nombre
                 input.form-control(type="text", name="name", id="name", value=customer.name required)
@@ -34,4 +34,4 @@ block content
 
     // Mensaje de error si no se encuentra el cliente
     if error
-      p.text-danger.mt-2 #{error}
+    p.text-danger.mt-2 #{error}

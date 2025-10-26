@@ -58,11 +58,11 @@ const showCustomerToDelete = async (req, res) => {
 //Actualiza para WEB
 const updateCustomerWeb = async (req, res) => {
     try {
-        const id = req.body.id;
+        const id = req.params.id;
         const result = await CustomerService.updateCustomer(id, req.body);
 
         if (result.error) {
-            return res.render('customersViews/editCustomer', { 
+            return res.render('customersViews/updatedCustomer', { 
                 title: 'Editar Cliente', 
                 error: result.error,
                 customer: { ...req.body, id }
