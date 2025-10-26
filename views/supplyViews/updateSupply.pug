@@ -1,0 +1,58 @@
+extends ../layout
+
+block content
+  h2.mb-4 Editar Insumo
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/supplies") ← Volver al menú
+  
+  if error
+    .alert.alert-danger #{error}
+
+  if supply
+    hr
+    form(method="post", action=`/supplies/update/${supply._id}`)
+      .mb-3
+        label.form-label(for="name") Nombre del Insumo
+        input.form-control(
+          type="text",
+          name="name",
+          id="name",
+          value=supply.name,
+          required
+        )
+
+      .mb-3
+        label.form-label(for="category") Categoría
+        input.form-control(
+          type="text",
+          name="category",
+          id="category",
+          value=supply.category,
+          required
+        )
+
+      .mb-3
+        label.form-label(for="unitPrice") Precio Unitario
+        input.form-control(
+          type="number",
+          step="0.01",
+          name="unitPrice",
+          id="unitPrice",
+          value=supply.unitPrice,
+          required
+        )
+
+      .mb-3
+        label.form-label(for="stock") Stock Disponible
+        input.form-control(
+          type="number",
+          name="stock",
+          id="stock",
+          value=supply.stock,
+          required
+        )
+
+      button.btn.btn-success(type="submit") Guardar cambios
+      a.btn.btn-secondary.ms-2(href="/supplies/list") Cancelar
+  else
+    p.text-warning No se encontró el insumo para editar.
