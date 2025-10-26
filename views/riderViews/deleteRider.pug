@@ -1,44 +1,34 @@
 extends ../layout
 
 block content
-  h2.mb-4 Eliminar Repartidor
+    h2.mb-4 Eliminar Repartidor
 
-  a.btn.btn-secondary.mb-3.ms-2(href="/riders") ← Volver al menú
-
-  
-  form(method="get" action="/riders/delete")
-    .mb-3.d-flex.flex-column
-      label.form-label(for="id") Ingresa el ID (corto) del repartidor a eliminar
-      input.form-control(type="number", name="id", id="id", required value=id)
-      button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
-
-  
-  if rider
-    hr
-    h4 ¿Estás seguro de que quieres eliminar a este repartidor?
+    a.btn.btn-secondary.mb-3.ms-2(href="/riders") ← Volver al menú
     
-    table.table.table-striped.table-hover
-      thead.table-dark
-        tr
-          
-          th ID
-          th Nombre
-          th DNI
-          th Teléfono
-      tbody
-        tr
-          
-          td= rider.riderId
-          td= rider.name
-          td= rider.dni
-          td= rider.phone
-    
-   
-    
-    form(action=`/riders/delete/${rider.riderId}?_method=DELETE`, method="POST", style="display:inline")
-      button.btn.btn-danger(type="submit") 🗑️ Sí, eliminar
-      a.btn.btn-secondary.ms-2(href="/riders") Cancelar
+    if rider
+        hr
+        h4 ¿Estás seguro de que quieres eliminar a este repartidor?
+        
+        table.table.table-striped.table-hover
+            thead.table-dark
+                tr
+                    th ID
+                    th Nombre
+                    th DNI
+                    th Teléfono
+            tbody
+                tr
+                    td= rider.riderId
+                    td= rider.name
+                    td= rider.dni
+                    td= rider.phone
+        
+        form(action=`/riders/delete/${rider.riderId}?_method=DELETE`, method="POST", style="display:inline")
+            button.btn.btn-danger(type="submit") Sí, eliminar
+            a.btn.btn-secondary.ms-2(href="/riders/list") Cancelar
 
- 
-  if error
-    p.text-danger.mt-2 #{error}
+    else if error
+        p.text-danger.mt-4 #{error}
+    
+    else
+         p.text-warning.mt-2 No se especificó o no se encontró el repartidor a eliminar.

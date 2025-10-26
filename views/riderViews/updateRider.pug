@@ -4,17 +4,12 @@ block content
   h2.mb-4 Editar Repartidor
 
   a.btn.btn-secondary.mb-3.ms-2(href="/riders") ← Volver al menú
+  
+  if error
+    .alert.alert-danger #{error}
 
-  
-  form(method="get" action="/riders/update")
-    .mb-3.d-flex.flex-column
-      label.form-label(for="id") Ingresa el ID (corto) del repartidor a editar
-      input.form-control(type="number", name="id", id="id", required value=id)
-      button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
-  
   if rider
     hr
-   
     form(method="post" action=`/riders/update/${rider.riderId}`)
       .mb-3
         label.form-label(for="name") Nombre Completo
@@ -29,7 +24,6 @@ block content
         label.form-label(for="phone") Teléfono
         input.form-control(type="text", name="phone", id="phone", value=rider.phone required)
       
-      
       .mb-3
         label.form-label(for="vehicle") Vehículo
         select.form-select(name="vehicle", id="vehicle", required)
@@ -37,12 +31,10 @@ block content
           option(value="Bici" selected=rider.vehicle === 'Bici') Bici
           option(value="Auto" selected=rider.vehicle === 'Auto') Auto
       
-     
       .mb-3
         label.form-label(for="patente") Patente
         input.form-control(type="text", name="patente", id="patente", value=rider.patente)
 
-     
       .mb-3
         label.form-label(for="state") Estado (Disponible / Ocupado)
         select.form-select(name="state", id="state", required)
@@ -51,6 +43,5 @@ block content
       
       button.btn.btn-success(type="submit") Guardar cambios
       a.btn.btn-secondary.ms-2(href="/riders") Cancelar
-
-  if error
-    p.text-danger.mt-2 #{error}
+  else
+    p.text-warning No se encontró el repartidor para editar.

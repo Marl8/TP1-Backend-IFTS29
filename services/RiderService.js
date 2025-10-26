@@ -48,12 +48,12 @@ const saveRider = async ({name, dni, email, phone, state, vehicle, patente})=>{
 const findAllRiders = async()=>{
     try {
         const riders = await Rider.find().sort({ riderId: 1 });
-        if(riders.length === 0){
-            return { riders: [], message: "No hay repartidores registrados en la base de datos." };
-        }
-        return {riders: [], message: null};
+    if(riders.length === 0){
+        throw new Error('No hay repartidores registrados en la base de datos.');
+    }
+    return riders;
     } catch (error) {
-        return { riders: [], message: error };
+        throw new Error(error.message);
     }  
 };
 
