@@ -1,6 +1,5 @@
 import Customer from '../models/Customer.js';
-import mongoose from 'mongoose';
-import { getNextSequence } from '../models/CounterModel.js'; 
+
 
 async function saveCustomerData({name, dni, phone, address}) {
     try {
@@ -12,11 +11,7 @@ async function saveCustomerData({name, dni, phone, address}) {
         if(found){
             throw new Error('Ya existe un Cliente con este DNI');
         }
-        
-        const newCustomerId = await getNextSequence('customerId'); 
-
         const customer = new Customer({
-            customerId: newCustomerId,
             name: name, 
             dni: dni, 
             phone: phone, 
@@ -32,37 +27,21 @@ async function saveCustomerData({name, dni, phone, address}) {
 
 const listCustomers = async () =>{
     try {
-        const customers = await Customer.find().sort({ customerId: 1 });
+        const customers = await Customer.find();
     return customers;
     } catch (error) {
         throw new Error(error.message);
     }
 };
 
-const findCustomerById = async (idOrDni) => {
-    const isValidObjectId = mongoose.Types.ObjectId.isValid(idOrDni);
-    
-    let customer;
-
+const findCustomerById = async (id) => {
     try {
-        if (isValidObjectId) {
-            customer = await Customer.findById(idOrDni);
-        }
-        
-        if (!customer) {
-            customer = await Customer.findOne({"dni": idOrDni});
-        }
-        
-        if (!customer) {
-            const numericId = parseInt(idOrDni);
-            if (!isNaN(numericId)) {
-                 customer = await Customer.findOne({"customerId": numericId});
-            }
-        }
+        const customer = await Customer.findById(id);
 
-        if (!customer) throw new Error ('Cliente no encontrado');
-        return customer;
-
+    if(!customer){
+        throw new Error('Customer no encontrado');
+    }
+    return customer;
     } catch (error) {
         throw new Error(error.message);
     }     
