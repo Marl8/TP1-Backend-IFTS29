@@ -37,7 +37,7 @@ app.use('/api/user', UserRoutes);
 app.use('/', WebCustomerRoutes);       
 app.use('/delivery', WebDeliveryRoutes); 
 app.use('/riders', WebRiderRoutes);
-app.use('/supplys', WebSupplyRoutes);
+app.use('/supplies', WebSupplyRoutes);
 
 app.listen(PORT, ()=>{
     connectDB();

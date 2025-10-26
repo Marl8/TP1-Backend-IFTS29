@@ -3,13 +3,13 @@ extends ../layout
 block content
   h2.mb-4 Agregar Insumos
 
-  a.btn.btn-secondary.mb-3.ms-2(href="/supplys") ← Volver al menú
+  a.btn.btn-secondary.mb-3.ms-2(href="/supplies") ← Volver al menú
 
   if query.error
     .alert.alert-danger
       | Error: !{decodeURIComponent(query.error)}
 
-  form(method="post", action="/supplys/save")
+  form(method="post", action="/supplies/save")
     .mb-3
       label.form-label(for="name") Nombre del insumo
       input.form-control(type="text", name="name", id="name", required,
@@ -39,4 +39,4 @@ block content
         placeholder="Ingrese los IDs de los ítems separados por comas")
 
     button.btn.btn-success(type="submit") Guardar
-    a.btn.btn-secondary.ms-2(href="/supplys") Cancelar
+    a.btn.btn-secondary.ms-2(href="/supplies") Cancelar

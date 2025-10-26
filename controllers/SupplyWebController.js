@@ -27,24 +27,23 @@ const listSupplysWeb = async (req, res) => {
     try {
         let supplys = []; 
         try {
-             supplys = await SupplyService.findSupplies(); 
+            supplys = await SupplyService.findSupplies(); 
         } catch (findError) {
-             if (!findError.message.includes('No hay insumos')) {
-                 throw findError; 
-             }
+            if (!findError.message.includes('No hay insumos')) throw findError;
         }
+
         res.render('supplyViews/listSupplys', {
             title: 'Listado de Insumos',
-            Supply: supplys,
+            supplys, // ✅ nombre correcto
             query: req.query 
         });
     } catch (error) {
-         console.error("Error al listar los insumos:", error);
-         res.status(500).render('errorView', {
-             title: "Error",
-             message: "No se pudieron cargar los insumos: " + error.message,
-             query: req.query
-         });
+        console.error("Error al listar los insumos:", error);
+        res.status(500).render('errorView', {
+            title: "Error",
+            message: "No se pudieron cargar los insumos: " + error.message,
+            query: req.query
+        });
     }
 };
 
@@ -54,28 +53,35 @@ const showSupplyToDelete = async (req, res) => {
     let error = null;
 
     try {
-        if (!idToFind) {
-            return res.redirect('/supplys'); 
-        }
+        if (!idToFind) return res.redirect('/supplys/list'); 
         
-        supply = await SupplyService.findSupplyById;
-        
-        if (!supply) {
-            error = `Insumo con ID ${idToFind} no encontrado.`;
-        }
+        supply = await SupplyService.findSupplyById(idToFind);
+        if (!supply) error = `Insumo con ID ${idToFind} no encontrado.`;
         
         res.render('supplyViews/deleteSupply', { 
             title: 'Eliminar Insumo', 
-            rider: rider,
-            error: error,
+            supply,
+            error,
             query: req.query
         });
+
     } catch (err) {
         res.render('supplyViews/deleteSupply', { 
             error: err.message, 
-            rider: null,
+            supply: null,
             query: req.query
         });
+    }
+};
+
+const deleteSupplyWeb = async (req, res) => {
+    try {
+        const id = req.params.id; 
+        await SupplyService.deleteSupply(id);
+        res.redirect('/supplies/list?success=eliminado'); 
+    } catch (error) {
+        const errorMessage = encodeURIComponent(error.message);
+        res.redirect(`/supplies/delete?id=${req.params.id}&error=${errorMessage}`);
     }
 };
 
@@ -83,7 +89,8 @@ const SupplyWebController = {
     showSupplyMenu,
     showAddSupplyForm,
     listSupplysWeb,
-    showSupplyToDelete
+    showSupplyToDelete,
+    deleteSupplyWeb
 };
 
 export default SupplyWebController;
