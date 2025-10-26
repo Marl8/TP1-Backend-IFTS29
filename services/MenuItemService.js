@@ -57,7 +57,7 @@ const updateMenuItem = async (id, {name, price, category, stock, supplies})=>{
         if (invalidSupplies.length > 0) {
             return {error:`Algunos suministros no existen en la base de datos: ${invalidSupplies.join(', ')}`};
         }
-        const item = await MenuItem.findByIdAndUpdate(id, id, {name, price, category, stock, supplies: validSupplies}, {
+        const item = await MenuItem.findByIdAndUpdate(id, {name, price, category, stock, supplies: validSupplies}, {
             new: true,
             runValidators: true,
         });
