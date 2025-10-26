@@ -12,7 +12,7 @@
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 34
+      "stock": 32
     },
     {
       "id": 3,
@@ -177,6 +177,40 @@
     },
     {
       "id": 1761401270316,
+      "customerId": "68f8d07df12d0ff5f94ac0ea",
+      "total": 4000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761404025774,
+      "customerId": "68f8d07df12d0ff5f94ac0ea",
+      "total": 4000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761490975063,
       "customerId": "68f8d07df12d0ff5f94ac0ea",
       "total": 4000,
       "status": "preparing",
