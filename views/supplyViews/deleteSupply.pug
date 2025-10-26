@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  h2.mb-4 Eliminar Insumo
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/customers") ← Volver al menú
+
+  form(method="get" action="/supplys/delete")
+    .mb-3.d-flex.flex-column
+      label.form-label(for="id") Ingresa el ID del insumo a eliminar
+      input.form-control(type="number", name="id", id="id", required value=id)
+      button.btn.btn-primary.mt-3.w-50.mx-auto(type="submit") Buscar
+
+  // Mostrar cliente encontrado
+  if supply 
+    hr
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+          th ID
+          th Nombre
+          th Categoria
+          th Precio Unitario
+          th Stock
+      tbody
+        tr
+          td #{supply.id}
+          td #{supply.name}
+          td #{supply.category}
+          td #{supply.unitPrice}
+
+    // Botones de acción fuera de la tabla
+    form(action=`/supplys/delete/${supply.id}?_method=DELETE`, method="POST", style="display:inline")
+      button.btn.btn-danger.mt-3(type="submit") 🗑️ Eliminar
+
+    a.btn.btn-secondary.mt-3.ms-2(href="/supplys/delete") Cancelar
+
+  // Mensaje de error si no se encuentra el insumo
+  if error
+    p.text-danger.mt-2 #{error}

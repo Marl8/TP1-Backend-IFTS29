@@ -27,7 +27,7 @@ const listSupplysWeb = async (req, res) => {
     try {
         let supplys = []; 
         try {
-             riders = await SupplyService.findSupplies(); 
+             supplys = await SupplyService.findSupplies(); 
         } catch (findError) {
              if (!findError.message.includes('No hay insumos')) {
                  throw findError; 
