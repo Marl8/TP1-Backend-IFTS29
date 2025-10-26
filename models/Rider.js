@@ -1,24 +1,15 @@
 import mongoose from "mongoose";
 
 const RiderSchema = new mongoose.Schema({
-    riderId: { 
-        type: Number, 
-        unique: true,
-        index: true
-    },
     name: { type: String, required: true },
     dni: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    
-   
     vehicle: { 
         type: String, 
         required: true,
         enum: ['Moto', 'Bici', 'Auto'] 
     },
-
-   
     patente: { type: String, default: 'N/A' }, 
     state: {
         type: String,

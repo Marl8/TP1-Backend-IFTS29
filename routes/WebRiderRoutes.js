@@ -15,12 +15,12 @@ router.get('/list', RiderWebController.listRidersWeb);
 router.post('/save', RiderWebController.saveRiderWeb);
 
 
-router.get('/update', RiderWebController.showRiderToEdit);
+router.get('/update/:id', RiderWebController.showRiderToEdit);
 
 
 router.post('/update/:id', RiderWebController.updateRiderWeb);
 
-router.get('/delete', RiderWebController.showRiderToDelete);
+router.get('/delete/:id', RiderWebController.showRiderToDelete);
 
 router.delete('/delete/:id', RiderWebController.deleteRiderWeb);
 

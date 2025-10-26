@@ -1,6 +1,4 @@
-import RiderService from '../services/RiderService.js';
-import { getNextSequence } from '../models/CounterModel.js'; 
-import CustomerService from '../services/CustomerService.js'; 
+import RiderService from '../services/RiderService.js'; 
 
 const showRiderMenu = (req, res) => {
     try {
@@ -51,31 +49,30 @@ const listRidersWeb = async (req, res) => {
     try {
         let riders = []; 
         try {
-             riders = await RiderService.findAllRiders(); 
+            riders = await RiderService.findAllRiders(); 
         } catch (findError) {
-             if (!findError.message.includes('No hay repartidores')) {
-                 throw findError; 
-             }
+            if (!findError.message.includes('No hay repartidores')) {
+                throw findError; 
+            }
         }
-       
         res.render('riderViews/listRiders', {
             title: 'Listado de Repartidores',
             riders: riders,
             query: req.query 
         });
     } catch (error) {
-         console.error("Error al listar repartidores:", error);
-         res.status(500).render('errorView', {
-             title: "Error",
-             message: "No se pudieron cargar los repartidores: " + error.message,
-             query: req.query
-         });
+        console.error("Error al listar repartidores:", error);
+        res.status(500).render('errorView', {
+            title: "Error",
+            message: "No se pudieron cargar los repartidores: " + error.message,
+            query: req.query
+        });
     }
 };
 
 
 const showRiderToEdit = async (req, res) => {
-    const id = req.query.id; 
+    const id = req.params.id; 
     let rider = null;
     let error = null;
     try {
@@ -99,16 +96,16 @@ const updateRiderWeb = async (req, res) => {
         const id = req.params.id;
         
         if (!/^[a-zA-Z\s]+$/.test(req.body.name)) {
-             throw new Error('El nombre solo debe contener letras y espacios.');
+            throw new Error('El nombre solo debe contener letras y espacios.');
         }
         if (!/^\d+$/.test(req.body.dni)) {
-             throw new Error('El DNI solo debe contener números.');
+            throw new Error('El DNI solo debe contener números.');
         }
         if (!req.body.email.includes('@')) {
-             throw new Error('El email debe ser válido (faltó el @).');
+            throw new Error('El email debe ser válido (faltó el @).');
         }
         if (!/^\d+$/.test(req.body.phone)) {
-             throw new Error('El teléfono solo debe contener números.');
+            throw new Error('El teléfono solo debe contener números.');
         }
 
         await RiderService.updateRider(id, req.body); 
@@ -124,7 +121,7 @@ const updateRiderWeb = async (req, res) => {
 };
 
 const showRiderToDelete = async (req, res) => {
-    const idToFind = req.query.id; 
+    const idToFind = req.params.id; 
     let rider = null;
     let error = null;
 
