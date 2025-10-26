@@ -23,7 +23,7 @@ block content
                     td= rider.dni
                     td= rider.phone
         
-        form(action=`/riders/delete/${rider.riderId}?_method=DELETE`, method="POST", style="display:inline")
+        form(action=`/riders/delete/${rider._id}?_method=DELETE`, method="POST", style="display:inline")
             button.btn.btn-danger(type="submit") Sí, eliminar
             a.btn.btn-secondary.ms-2(href="/riders/list") Cancelar
 
@@ -31,4 +31,4 @@ block content
         p.text-danger.mt-4 #{error}
     
     else
-         p.text-warning.mt-2 No se especificó o no se encontró el repartidor a eliminar.
+        p.text-warning.mt-2 No se especificó o no se encontró el repartidor a eliminar.
