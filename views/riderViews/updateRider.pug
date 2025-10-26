@@ -10,7 +10,7 @@ block content
 
   if rider
     hr
-    form(method="post" action=`/riders/update/${rider.riderId}`)
+    form(method="post" action=`/riders/update/${rider._id}`)
       .mb-3
         label.form-label(for="name") Nombre Completo
         input.form-control(type="text", name="name", id="name", value=rider.name required)
