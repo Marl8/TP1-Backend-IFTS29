@@ -1,4 +1,137 @@
 import DeliveryOrder from "../models/DeliveryOrder.js";
+
+const DeliveryService = {
+  crearPedido: async (customerId, items, status, assignedRiderId = null, estimatedTime = null, plataforma = "Propia") => {
+    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+    const newOrder = new DeliveryOrder({
+      customerId,
+      items,
+      status,
+      total,
+      assignedRiderId,
+      estimatedTime: estimatedTime ? new Date(Date.now() + estimatedTime * 60000) : null,
+      plataforma
+    });
+
+    const savedOrder = await newOrder.save();
+    console.log("✅ Pedido guardado en Mongo:", savedOrder._id);
+    return savedOrder;
+  },
+
+  listarPedidos: async () => {
+    return await DeliveryOrder.find()
+      .populate("customerId")
+      .populate("items.menuItem")
+      .populate("assignedRiderId");
+  },
+
+  despacharPedido: async (id) => {
+    const pedido = await DeliveryOrder.findById(id);
+    if (!pedido) throw new Error("Pedido no encontrado");
+    pedido.status = "dispatched";
+    await pedido.save();
+    return pedido;
+  },
+
+  eliminarPedido: async (id) => {
+    await DeliveryOrder.findByIdAndDelete(id);
+    return true;
+  }
+};
+
+export default DeliveryService;
+
+
+/*
+// DeliveryService.js
+import DeliveryOrder from "../models/DeliveryOrder.js";
+
+const DeliveryService = {
+
+  // Crear un nuevo pedido
+  crearPedido: async (
+    customerId,
+    items = [],
+    status = "preparing",
+    total = 0,
+    assignedRiderId = null,
+    estimatedTime = null,
+    plataforma = "Propia"
+  ) => {
+    try {
+      const newOrder = new DeliveryOrder({
+        customerId,
+        items: items.map(i => ({
+          menuItem: i.menuItem,  // ObjectId de MenuItem
+          quantity: i.quantity,
+          price: i.price
+        })),
+        status,
+        total,
+        assignedRiderId,
+        estimatedTime: estimatedTime ? new Date(Date.now() + estimatedTime * 60000) : null,
+        plataforma
+      });
+
+      const savedOrder = await newOrder.save();
+      console.log("✅ Pedido guardado en Mongo:", savedOrder._id);
+      return savedOrder;
+    } catch (err) {
+      console.error("❌ Error en DeliveryService.crearPedido:", err);
+      throw err;
+    }
+  },
+
+  // Listar todos los pedidos, opcional por plataforma
+  listarPedidos: async (plataforma) => {
+    const filter = plataforma ? { plataforma } : {};
+    return await DeliveryOrder.find(filter)
+      .populate("customerId")
+      .populate("items.menuItem")
+      .populate("assignedRiderId");
+  },
+
+  // Listar pedidos externos (no Propia)
+  listarPedidosExternos: async () => {
+    return await DeliveryOrder.find({ status: "pending", plataforma: { $ne: "Propia" } })
+      .populate("customerId")
+      .populate("items.menuItem");
+  },
+
+  // Confirmar pedido externo
+  confirmarPedidoExterno: async (id) => {
+    const pedido = await DeliveryOrder.findById(id);
+    if (!pedido) throw new Error("Pedido externo no encontrado");
+    pedido.status = "preparing";
+    await pedido.save();
+    return pedido;
+  },
+
+  // Despachar pedido
+  despacharPedido: async (id) => {
+    const pedido = await DeliveryOrder.findById(id);
+    if (!pedido) throw new Error("Pedido no encontrado");
+    pedido.status = "dispatched";
+    await pedido.save();
+    return pedido;
+  },
+
+  // Eliminar pedido
+  eliminarPedido: async (id) => {
+    await DeliveryOrder.findByIdAndDelete(id);
+    return true;
+  }
+};
+
+export default DeliveryService;
+
+
+
+
+
+
+/*import DeliveryOrder from "../models/DeliveryOrder.js";
 import { findData, writeData } from "../data/db.js";
 
 const EXTERNAL_PLATFORMS = ["Rappi", "PedidosYa", "Uber Eats"];
@@ -8,7 +141,7 @@ const DeliveryService = {
   /**
    * Crear un pedido (local o mongo)
    */
-  async crearPedido(customerId, items, estado, total, repartidor, estEntrega, plataforma) {
+ /* async crearPedido(customerId, items, estado, total, repartidor, estEntrega, plataforma) {
     if (!customerId || !Array.isArray(items) || items.length === 0 || !plataforma) {
       throw new Error("Datos incompletos. Se requieren: Cliente, Ítems y Plataforma.");
     }
@@ -92,12 +225,12 @@ const DeliveryService = {
       console.log("✅ Pedido guardado correctamente con ID:", nuevoPedido.id);
       return nuevoPedido;
       }
-  },
+  },/*
 
   /**
    * Crear pedido externo (PedidosYa, Rappi, UberEats)
    */
-  async crearPedidoExterno(customerId, items, plataforma) {
+ /* async crearPedidoExterno(customerId, items, plataforma) {
     if (!customerId || !Array.isArray(items) || items.length === 0 || !plataforma) {
       throw new Error("Datos incompletos");
     }
@@ -160,7 +293,7 @@ const DeliveryService = {
   /**
    * Listar pedidos
    */
-  async listarPedidos(plataforma) {
+  /*async listarPedidos(plataforma) {
     if (MODE === "mongo") {
       const filter = plataforma ? { plataforma } : {};
       return await DeliveryOrder.find(filter)
@@ -182,7 +315,7 @@ const DeliveryService = {
   /**
    * Listar pedidos externos pendientes
    */
-  async listarPedidosExternos() {
+ /* async listarPedidosExternos() {
     if (MODE === "mongo") {
       return await DeliveryOrder.find({ status: "pending", plataforma: { $ne: "Propia" } });
     } else {
@@ -194,7 +327,7 @@ const DeliveryService = {
   /**
    * Confirmar pedido externo
    */
-  async confirmarPedidoExterno(id) {
+ /* async confirmarPedidoExterno(id) {
     if (MODE === "mongo") {
       const pedido = await DeliveryOrder.findById(id);
       if (!pedido) throw new Error("Pedido externo no encontrado");
@@ -216,7 +349,7 @@ const DeliveryService = {
   /**
    * Despachar pedido (cambia estado)
    */
-  async despacharPedido(id) {
+ /* async despacharPedido(id) {
     if (MODE === "mongo") {
       const pedido = await DeliveryOrder.findById(id);
       if (!pedido) throw new Error("Pedido no encontrado");
@@ -236,7 +369,7 @@ const DeliveryService = {
   /**
    * Eliminar pedido
    */
-  async eliminarPedido(id) {
+ /* async eliminarPedido(id) {
     if (MODE === "mongo") {
       await DeliveryOrder.findByIdAndDelete(id);
       return true;
@@ -253,4 +386,4 @@ const DeliveryService = {
   },
 };
 
-export default DeliveryService;
+export default DeliveryService;*/

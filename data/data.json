@@ -12,14 +12,14 @@
       "name": "hamburguesa",
       "price": 4000,
       "category": "minuta",
-      "stock": 34
+      "stock": 29
     },
     {
       "id": 3,
       "name": "ensalada mixta",
       "price": 3000,
       "category": "minuta",
-      "stock": 34
+      "stock": 33
     },
     {
       "id": 4,
@@ -178,6 +178,80 @@
     {
       "id": 1761401270316,
       "customerId": "68f8d07df12d0ff5f94ac0ea",
+      "total": 4000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761426096202,
+      "customerId": "68fd3a3d6d2fe5565cea0f62",
+      "total": 8000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 2
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761426217391,
+      "customerId": "68fd3b026d2fe5565cea0f74",
+      "total": 7000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 3,
+          "name": "ensalada mixta",
+          "price": 3000,
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761428368145,
+      "customerId": "68fd4316f3281000e84cffcb",
+      "total": 4000,
+      "status": "preparing",
+      "plataforma": "Propia",
+      "items": [
+        {
+          "id": 2,
+          "name": "hamburguesa",
+          "price": 4000,
+          "quantity": 1
+        }
+      ],
+      "assignedRiderId": null,
+      "estimatedTime": null
+    },
+    {
+      "id": 1761429519450,
+      "customerId": "68fd42fff3281000e84cffc7",
       "total": 4000,
       "status": "preparing",
       "plataforma": "Propia",
