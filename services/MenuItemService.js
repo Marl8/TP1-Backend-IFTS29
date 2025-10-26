@@ -31,7 +31,7 @@ const saveMenuItem = async({name, price, category, stock, supplies})=>{
         }
         const {invalidSupplies, validSupplies} = await suppliesValidator(supplies);
         if (invalidSupplies.length > 0) {
-            throw new Error(`Algunos suministros no existen en la base de datos: ${invalidSupplies.join(', ')}`);
+            throw new Error(`Algunos suministros no existen en la base de datos o no tienen stock suficiente: ${invalidSupplies.join(', ')}`);
         }
         const item = new MenuItem({name, price, category, stock, supplies: validSupplies});
         const saveItem = await item.save();
@@ -41,9 +41,6 @@ const saveMenuItem = async({name, price, category, stock, supplies})=>{
                 { $addToSet: { menuItems: saveItem._id } }
             );
         }
-        // Reemplazamos los IDs de los supplies en el MenuItem por los documentos completos para poder actualizar los stocks.
-        await saveItem.populate('supplies'); 
-        updateStockSupplies(saveItem._id);
         return saveItem;
     } catch (error) {
         throw new Error(error.message);
@@ -60,7 +57,7 @@ const updateMenuItem = async (id, {name, price, category, stock, supplies})=>{
         if (invalidSupplies.length > 0) {
             return {error:`Algunos suministros no existen en la base de datos: ${invalidSupplies.join(', ')}`};
         }
-        const item = await MenuItem.findByIdAndUpdate(id, id, {name, price, category, stock, supplies: validSupplies}, {
+        const item = await MenuItem.findByIdAndUpdate(id, {name, price, category, stock, supplies: validSupplies}, {
             new: true,
             runValidators: true,
         });
@@ -76,6 +73,7 @@ const updateMenuItem = async (id, {name, price, category, stock, supplies})=>{
 
 const updateStockSupplies = async (id) => {
     try {
+        // Reemplazamos los IDs de los supplies en el MenuItem por los documentos completos para poder actualizar los stocks.
         const itemData = await MenuItem.findById(id).populate('supplies');
         if (!itemData) {
             return {error:'Item no encontrado'};
@@ -100,6 +98,14 @@ const updateStockItem = async (id, stock) => {
         const itemData = await MenuItem.findById(id).populate('supplies');
         if (!itemData) {
             return {error:'Item no encontrado'};
+        }
+        if(stock > itemData.stock){
+            for(let supply of itemData.supplies){
+                if(supply.stock >= 0 || supply.stock ){
+                    throw new Error('Insumos insuficientes.')
+                }
+            }
+            updateStockSupplies(saveItem._id);
         }
         itemData.stock = stock;
         await itemData.save();
@@ -131,7 +137,7 @@ async function suppliesValidator(supplies){
     for (let supplyId of supplies) {
         const supply = await Supply.findById(supplyId.trim()); 
         
-        if (supply) {
+        if (supply && supply.stock > 0) {
             validSupplies.push(supply._id);
         } else {
             invalidSupplies.push(supplyId);
