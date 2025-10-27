@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+  h2.mb-5.text-center Gestión de Insumos
+
+  a.btn.btn-secondary.mb-3.ms-2(href="/") ← Volver al Menú
+
+  if query.success
+    script.
+      if ('!{query.success}' === 'eliminado') {
+          alert('¡Insumo eliminado con éxito!');
+      } else {
+          alert('Insumo guardado con éxito!');
+      }
+  if query.error
+    .alert.alert-danger Error: !{query.error}
+
+  .d-flex.flex-column.align-items-center.g-3
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/supplies/add") ➕ Agregar Insumo
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/supplies/list") 📋 Listar Insumos
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/supplies/list?action=edit") ✏️ Editar Insumo
+    a.btn.mb-3.w-50(style="background-color:#343a40; color:white; border:none;", href="/supplies/list?action=delete") 🗑 Eliminar Insumo

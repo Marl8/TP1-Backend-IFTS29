@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+  h2.mb-4 Listado de Insumos
+  
+  a.btn.btn-secondary.mb-3.ms-2(href="/") ← Volver al menú
+
+  if supplys && supplys.length
+    table.table.table-striped.table-hover
+      thead.table-dark
+        tr
+          th ID
+          th Nombre
+          th Categoría
+          th Precio Unitario
+          th Stock    
+
+          if query.action !== 'edit' && query.action !== 'delete'
+            th Acciones
+          else if query.action === 'edit'
+            th Seleccionar para Editar
+          else if query.action === 'delete'
+            th Seleccionar para Eliminar
+
+      tbody
+        each supply in supplys
+          tr
+            td= supply._id
+            td= supply.name
+            td= supply.category
+            td $#{supply.unitPrice}
+            td= supply.stock
+
+            if query.action !== 'edit' && query.action !== 'delete'
+              td
+                a.btn.btn-sm.btn-dark(href=`/supplieys/update?id=${supply._id}`) ✏️
+                form(action=`/supplys/delete/${supply._id}?_method=DELETE`, method="POST", style="display:inline")
+                  button.btn.btn-sm.btn-danger.ms-2(type="submit") 🗑️
+            else if query.action === 'edit'
+              td
+                a.btn.btn-sm.btn-primary(href=`/supplies/update?id=${supply._id}`) Editar este insumo
+            else if query.action === 'delete'
+              td
+                a.btn.btn-sm.btn-danger(href=`/supplies/delete?id=${supply._id}`) Eliminar este insumo
+  else
+    p.text-muted No hay insumos registrados aún.

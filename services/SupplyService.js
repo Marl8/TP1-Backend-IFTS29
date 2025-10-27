@@ -1,9 +1,9 @@
 import Supply from '../models/Supply.js';
 
 
-// Guardar un suministro 
+// Guardar un insumo
 
-const saveSupply = async({name, category, unitPrice, stock, menuItemId})=>{
+const saveSupply = async({name, category, unitPrice, stock})=>{
     try {
         if (!name || !unitPrice || !category || !stock) {
         throw new Error('Datos incompletos. Se requieren: name, unitPrice, category, stock');
@@ -13,7 +13,7 @@ const saveSupply = async({name, category, unitPrice, stock, menuItemId})=>{
         if(found){
             throw new Error('Ya existe un item con este id');
         }
-        const supply = new Supply({name, category, unitPrice, stock, menuItemId});
+        const supply = new Supply({name, category, unitPrice, stock});
         const saveSupply = await supply.save();
         return saveSupply;
     } catch (error) {
@@ -22,7 +22,7 @@ const saveSupply = async({name, category, unitPrice, stock, menuItemId})=>{
 };
 
 
-// Buscar todos los suministros
+// Buscar todos los insumos
 
 const findSupplies = async() => {
     try {
@@ -34,7 +34,7 @@ const findSupplies = async() => {
 };
 
 
-// Buscar suministro por id
+// Buscar insumo por id
 
 const findSupplyById = async(id) => {
     try {
@@ -50,7 +50,7 @@ const findSupplyById = async(id) => {
 };
 
 
-// Actualizar suministro
+// Actualizar insumo
 
 const updateSupply = async (id, {name, category, unitPrice, stock})=>{
     try {
@@ -71,7 +71,7 @@ const updateSupply = async (id, {name, category, unitPrice, stock})=>{
 };
 
 
-// Actualizar el stock del suministro
+// Actualizar el stock del insumo
 
 const updateStockSupply = async (id, stock)=>{
     try {
@@ -87,7 +87,7 @@ const updateStockSupply = async (id, stock)=>{
     }    
 };
 
-// Eliminar un suministro
+// Eliminar un insumo
 
 const deleteSupply = async (id)=>{
     try{
