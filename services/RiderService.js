@@ -40,7 +40,7 @@ const findAllRiders = async()=>{
         }
         return riders;
     } catch (error) {
-        return { riders: [], message: error };
+        throw new Error(error.message);
     }  
 };
 
