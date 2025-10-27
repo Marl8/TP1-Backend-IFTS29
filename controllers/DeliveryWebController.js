@@ -272,12 +272,10 @@ const showDeliveryToDelete = async (req, res) => {
     let delivery = null;
     let error = null;
     let customerName = 'N/A';
-
     try {
         if (idToFind) {
-            delivery = DeliveryService.listarPedidos().find(
-                d => String(d.id) === String(idToFind)
-            );
+            delivery = (await DeliveryService.listarPedidos()).find( 
+            d => String(d.id) === String(idToFind));
             
             if (delivery) {
                 try {
