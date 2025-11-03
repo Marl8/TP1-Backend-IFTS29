@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt'; 
 import User from '../models/User.js';
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const saveUser = async({name, dni, email, username, password, rol})=>{
     try {
@@ -121,9 +124,16 @@ const loginUser = async ({username, password}) => {
         if (!isMatch) {
         throw new Error('Contraseña incorrecta');
         }
-        const userDto = user.toObject();
-        delete userDto.password;
-        return {islogin: true, user: userDto};
+        const token = jwt.sign({ 
+            id: user._id,
+            role: user.rol 
+            }, 
+            process.env.JWT_SECRET, 
+            {expiresIn: "1h"});
+
+        /*const userDto = user.toObject();
+        delete userDto.password;*/
+        return {islogin: true, token: token, role: user.rol};
     } catch (error) {
         throw new Error(error.message);
     }
