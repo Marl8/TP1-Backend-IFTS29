@@ -131,9 +131,28 @@ const loginUser = async ({username, password}) => {
             process.env.JWT_SECRET, 
             {expiresIn: "1h"});
 
-        /*const userDto = user.toObject();
-        delete userDto.password;*/
         return {islogin: true, token: token, role: user.rol};
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const loginUserWEB = async ({username, password}) => {
+    try {
+        if (!username || !password) {
+        throw new Error('Faltan datos: username y password son obligatorios');
+        }
+        const user = await User.findOne({ username });
+        if (!user) {
+        throw new Error('Usuario no encontrado');
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+        throw new Error('Contraseña incorrecta');
+        }
+        const userDto = user.toObject();
+        delete userDto.password;
+        return {islogin: true, user:userDto};
     } catch (error) {
         throw new Error(error.message);
     }
@@ -158,7 +177,8 @@ const UserService = {
     findUserByDni,
     updateUser,
     deleteUser,
-    loginUser
+    loginUser,
+    loginUserWEB
 };
 
 export default UserService;
